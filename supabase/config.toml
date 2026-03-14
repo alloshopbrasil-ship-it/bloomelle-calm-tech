@@ -1,0 +1,4 @@
+project_id = "qxnpcbpcirsilsiigmqj"
+
+[functions.auto-community-posts]
+verify_jwt = false
