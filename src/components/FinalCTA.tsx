@@ -17,7 +17,7 @@ const FinalCTA = () => {
           <div className="space-y-4 md:space-y-6">
             <h2 className="text-3xl md:text-5xl lg:text-7xl font-light tracking-tight leading-tight">
               {t("landing.finalCta.title1")}
-              <span className="block mt-2 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent font-normal pb-2">
+              <span className="block mt-2 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent font-normal">
                 {t("landing.finalCta.title2")}
               </span>
             </h2>

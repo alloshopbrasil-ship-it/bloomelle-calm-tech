@@ -42,7 +42,7 @@ const Features = () => {
         <div className="text-center mb-20 space-y-4 animate-fade-in">
           <h2 className="text-4xl md:text-5xl lg:text-6xl font-light tracking-tight">
             {t("landing.features.title1")}
-            <span className="block mt-2 text-transparent bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text font-normal pb-2">
+            <span className="block mt-2 text-transparent bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text font-normal">
               {t("landing.features.title2")}
             </span>
           </h2>
