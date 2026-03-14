@@ -36,7 +36,6 @@ const Login = () => {
 
   const avatarUrls = [authWoman1, authWoman2, communityWoman9, communityWoman10];
 
-  // Lockout countdown timer
   useEffect(() => {
     if (!lockoutUntil) return;
     const interval = setInterval(() => {
@@ -138,36 +137,35 @@ const Login = () => {
   };
 
   return (
-    <div className="h-screen bg-gradient-to-br from-background via-muted/30 to-primary/5 flex items-center justify-center overflow-hidden p-2 sm:p-4">
-      <div className="w-full relative max-w-6xl flex flex-col md:flex-row shadow-2xl rounded-3xl h-[95vh] md:h-auto md:max-h-[90vh]">
-        <div className="w-full h-full z-10 absolute bg-gradient-to-t from-transparent to-primary/5 rounded-3xl pointer-events-none"></div>
+    <div className="min-h-screen bg-gradient-to-br from-background via-muted/30 to-primary/5 flex items-center justify-center p-4 sm:p-6 md:p-8">
+      <div className="w-full max-w-5xl flex flex-col md:flex-row shadow-2xl rounded-3xl overflow-hidden bg-card/95 backdrop-blur-sm">
         
         {/* Left side - Image panel */}
         <div 
-          className="relative md:w-1/2 h-[180px] shrink-0 md:h-auto md:min-h-[500px] bg-cover bg-center rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none overflow-hidden"
+          className="relative md:w-1/2 min-h-[200px] md:min-h-[600px] bg-cover bg-center"
           style={{ backgroundImage: `url(${loginHero})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-secondary/30 to-accent/40 backdrop-blur-[2px]"></div>
-          <div className="relative z-10 p-4 md:p-8 h-full flex flex-col justify-end text-white">
-            <h1 className="text-2xl md:text-3xl font-light leading-tight tracking-tight mb-2">
+          <div className="absolute inset-0 bg-gradient-to-br from-primary/40 via-secondary/30 to-accent/40 backdrop-blur-[1px]"></div>
+          <div className="relative z-10 p-8 h-full flex flex-col justify-end text-white">
+            <h1 className="text-3xl md:text-4xl font-light leading-tight tracking-tight mb-2">
               Bem-vinda de volta
             </h1>
-            <p className="text-base md:text-lg opacity-90 font-light">
+            <p className="text-lg opacity-90 font-light">
               Continue sua jornada de autoconhecimento.
             </p>
           </div>
         </div>
 
         {/* Right side - Form */}
-        <div className="p-4 sm:p-6 md:p-8 md:w-1/2 flex flex-col justify-center bg-card/95 backdrop-blur-sm rounded-b-3xl md:rounded-r-3xl md:rounded-bl-none flex-1 overflow-hidden">
-          <div className="flex flex-col items-start mb-3">
-            <div className="text-primary mb-2">
-              <Sparkles className="h-7 w-7" />
+        <div className="p-6 sm:p-10 md:p-12 md:w-1/2 flex flex-col justify-center">
+          <div className="flex flex-col items-start mb-8">
+            <div className="text-primary mb-3">
+              <Sparkles className="h-8 w-8" />
             </div>
-            <Link to="/" className="text-lg font-light text-foreground tracking-wide hover:text-primary transition-colors mb-1">
+            <Link to="/" className="text-xl font-light text-foreground tracking-wide hover:text-primary transition-colors mb-1">
               Bloomelle
             </Link>
-            <h2 className="text-xl font-light mb-1 tracking-tight text-foreground">
+            <h2 className="text-2xl font-light mb-1 tracking-tight text-foreground">
               Entrar
             </h2>
             <p className="text-sm text-muted-foreground font-light">
@@ -175,61 +173,50 @@ const Login = () => {
             </p>
           </div>
 
-          <form className="flex flex-col gap-2.5" onSubmit={handleSubmit}>
-            <div>
-              <Label htmlFor="email" className="block text-sm mb-1.5 font-light">
+          <form className="flex flex-col gap-4" onSubmit={handleSubmit}>
+            <div className="space-y-2">
+              <Label htmlFor="email" className="text-sm font-light">
                 E-mail
               </Label>
               <Input
                 type="email"
                 id="email"
                 placeholder="seu@email.com"
-                className={`w-full rounded-xl transition-colors ${
-                  emailError ? "border-destructive" : ""
-                }`}
+                className={`rounded-xl h-11 ${emailError ? "border-destructive" : ""}`}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                aria-invalid={!!emailError}
-                aria-describedby="email-error"
-                maxLength={255}
                 disabled={isLockedOut}
               />
               {emailError && (
-                <p id="email-error" className="text-destructive text-xs mt-1">
-                  {emailError}
-                </p>
+                <p className="text-destructive text-xs mt-1">{emailError}</p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="password" className="block text-sm mb-1.5 font-light">
-                Senha
-              </Label>
+            <div className="space-y-2">
+              <div className="flex items-center justify-between">
+                <Label htmlFor="password" title="Senha" className="text-sm font-light">
+                  Senha
+                </Label>
+                <button
+                  type="button"
+                  onClick={() => setShowForgotPassword(true)}
+                  className="text-xs text-primary hover:underline"
+                >
+                  Esqueceu sua senha?
+                </button>
+              </div>
               <Input
                 type="password"
                 id="password"
                 placeholder="••••••••"
-                className={`w-full rounded-xl transition-colors ${
-                  passwordError ? "border-destructive" : ""
-                }`}
+                className={`rounded-xl h-11 ${passwordError ? "border-destructive" : ""}`}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                aria-invalid={!!passwordError}
-                aria-describedby="password-error"
                 disabled={isLockedOut}
               />
               {passwordError && (
-                <p id="password-error" className="text-destructive text-xs mt-1">
-                  {passwordError}
-                </p>
+                <p className="text-destructive text-xs mt-1">{passwordError}</p>
               )}
-              <button
-                type="button"
-                onClick={() => setShowForgotPassword(true)}
-                className="text-sm text-primary hover:underline mt-1"
-              >
-                Esqueceu sua senha?
-              </button>
             </div>
 
             {isLockedOut && (
@@ -243,13 +230,13 @@ const Login = () => {
             <Button
               type="submit"
               size="lg"
-              className="w-full rounded-full shadow-soft hover:shadow-bloom transition-all duration-300"
+              className="w-full rounded-full h-12 shadow-soft hover:shadow-bloom transition-all duration-300 mt-2"
               disabled={loading || isLockedOut}
             >
               {loading ? "Entrando..." : isLockedOut ? `Aguarde ${lockoutRemaining}s` : "Entrar"}
             </Button>
 
-            <div className="relative my-2">
+            <div className="relative my-4">
               <div className="absolute inset-0 flex items-center">
                 <div className="w-full border-t border-muted"></div>
               </div>
@@ -261,7 +248,7 @@ const Login = () => {
             <Button
               type="button"
               variant="outline"
-              className="w-full rounded-full border-2"
+              className="w-full rounded-full h-11 border-2"
               onClick={handleGoogleSignIn}
               disabled={googleLoading}
             >
@@ -274,12 +261,12 @@ const Login = () => {
               {googleLoading ? "Entrando..." : "Entrar com Google"}
             </Button>
 
-            <div className="flex items-center justify-center gap-3 mt-2">
+            <div className="flex items-center justify-center gap-3 mt-6">
               <AvatarCircles avatarUrls={avatarUrls} numPeople={2847} />
               <span className="text-xs text-muted-foreground">mulheres florescendo</span>
             </div>
 
-            <div className="text-center text-muted-foreground text-sm mt-2">
+            <div className="text-center text-muted-foreground text-sm mt-4">
               Ainda não tem conta?{" "}
               <Link to="/signup" className="text-primary font-medium hover:underline transition-colors">
                 Criar conta
@@ -287,7 +274,7 @@ const Login = () => {
             </div>
           </form>
 
-          <div className="mt-2 text-center">
+          <div className="mt-8 text-center">
             <Link
               to="/"
               className="text-xs text-muted-foreground hover:text-primary transition-colors"

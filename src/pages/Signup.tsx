@@ -61,7 +61,6 @@ const Signup = () => {
     e.preventDefault();
     let valid = true;
 
-    // Email validation
     if (!isValidEmail(formData.email)) {
       setEmailError("Por favor, insira um e-mail válido.");
       valid = false;
@@ -72,7 +71,6 @@ const Signup = () => {
       setEmailError("");
     }
 
-    // Password strength validation
     if (!passwordStrength.isValid) {
       setPasswordErrors(passwordStrength.errors);
       valid = false;
@@ -80,7 +78,6 @@ const Signup = () => {
       setPasswordErrors([]);
     }
 
-    // Confirm password
     if (formData.password !== formData.confirmPassword) {
       setConfirmPasswordError("As senhas não coincidem.");
       valid = false;
@@ -101,7 +98,6 @@ const Signup = () => {
           variant: "destructive"
         });
       } else {
-        // Show email verification screen instead of redirecting
         setShowEmailVerification(true);
       }
       setLoading(false);
@@ -115,10 +111,9 @@ const Signup = () => {
     });
   };
 
-  // Email verification screen
   if (showEmailVerification) {
     return (
-      <div className="h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 flex items-center justify-center p-4">
         <div className="max-w-md w-full bg-card rounded-3xl shadow-2xl p-8 text-center">
           <div className="text-primary mb-4">
             <Sparkles className="h-12 w-12 mx-auto" />
@@ -148,20 +143,19 @@ const Signup = () => {
   }
 
   return (
-    <div className="h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 flex items-center justify-center overflow-hidden p-2 sm:p-4">
-      <div className="w-full relative max-w-6xl flex flex-col md:flex-row shadow-2xl rounded-3xl h-[95vh] md:h-auto md:max-h-[90vh]">
-        <div className="w-full h-full z-10 absolute bg-gradient-to-b from-transparent to-accent/5 rounded-3xl pointer-events-none"></div>
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/10 flex items-center justify-center p-4 sm:p-6 md:p-8">
+      <div className="w-full max-w-5xl flex flex-col md:flex-row shadow-2xl rounded-3xl overflow-hidden bg-card/95 backdrop-blur-sm">
         
         {/* Left side - Form */}
-        <div className="p-4 sm:p-6 md:p-8 md:w-1/2 flex flex-col justify-center bg-card/95 backdrop-blur-sm rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none order-2 md:order-1 flex-1 overflow-y-auto">
-          <div className="flex flex-col items-start mb-3">
-            <div className="text-primary mb-2">
-              <Sparkles className="h-7 w-7" />
+        <div className="p-6 sm:p-10 md:p-12 md:w-1/2 flex flex-col justify-center order-2 md:order-1">
+          <div className="flex flex-col items-start mb-6">
+            <div className="text-primary mb-3">
+              <Sparkles className="h-8 w-8" />
             </div>
-            <Link to="/" className="text-lg font-light text-foreground tracking-wide hover:text-primary transition-colors mb-1">
+            <Link to="/" className="text-xl font-light text-foreground tracking-wide hover:text-primary transition-colors mb-1">
               Bloomelle
             </Link>
-            <h2 className="text-xl font-light mb-1 tracking-tight text-foreground">
+            <h2 className="text-2xl font-light mb-1 tracking-tight text-foreground">
               Criar Conta
             </h2>
             <p className="text-sm text-muted-foreground font-light">
@@ -169,16 +163,16 @@ const Signup = () => {
             </p>
           </div>
 
-          <form className="flex flex-col gap-2" onSubmit={handleSubmit}>
-            <div>
-              <Label htmlFor="name" className="block text-sm mb-1 font-light">
+          <form className="flex flex-col gap-3.5" onSubmit={handleSubmit}>
+            <div className="space-y-1.5">
+              <Label htmlFor="name" className="text-sm font-light">
                 Nome
               </Label>
               <Input
                 type="text"
                 id="name"
                 placeholder="Como gostaria de ser chamada?"
-                className="w-full rounded-xl"
+                className="rounded-xl h-10"
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -186,82 +180,66 @@ const Signup = () => {
               />
             </div>
 
-            <div>
-              <Label htmlFor="email" className="block text-sm mb-1 font-light">
+            <div className="space-y-1.5">
+              <Label htmlFor="email" className="text-sm font-light">
                 E-mail
               </Label>
               <Input
                 type="email"
                 id="email"
                 placeholder="seu@email.com"
-                className={`w-full rounded-xl transition-colors ${
-                  emailError ? "border-destructive" : ""
-                }`}
+                className={`rounded-xl h-10 ${emailError ? "border-destructive" : ""}`}
                 value={formData.email}
                 onChange={handleChange}
-                aria-invalid={!!emailError}
-                aria-describedby="email-error"
                 maxLength={255}
               />
               {emailError && (
-                <p id="email-error" className="text-destructive text-xs mt-0.5">
-                  {emailError}
-                </p>
+                <p className="text-destructive text-xs mt-1">{emailError}</p>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="password" className="block text-sm mb-1 font-light">
+            <div className="space-y-1.5">
+              <Label htmlFor="password" title="Senha" className="text-sm font-light">
                 Criar senha
               </Label>
               <Input
                 type="password"
                 id="password"
                 placeholder="••••••••"
-                className={`w-full rounded-xl transition-colors ${
-                  passwordErrors.length > 0 ? "border-destructive" : ""
-                }`}
+                className={`rounded-xl h-10 ${passwordErrors.length > 0 ? "border-destructive" : ""}`}
                 value={formData.password}
                 onChange={handleChange}
-                aria-invalid={passwordErrors.length > 0}
               />
-              {/* Password strength indicators */}
               {formData.password.length > 0 && (
-                <div className="mt-1.5 space-y-0.5">
+                <div className="mt-2 space-y-1">
                   <PasswordRule passed={!passwordStrength.errors.includes("min8")} label="Mínimo 8 caracteres" />
                   <PasswordRule passed={!passwordStrength.errors.includes("uppercase")} label="Uma letra maiúscula" />
                   <PasswordRule passed={!passwordStrength.errors.includes("number")} label="Um número" />
-                  <PasswordRule passed={!passwordStrength.errors.includes("special")} label="Um caractere especial (!@#$...)" />
+                  <PasswordRule passed={!passwordStrength.errors.includes("special")} label="Um caractere especial" />
                 </div>
               )}
             </div>
 
-            <div>
-              <Label htmlFor="confirmPassword" className="block text-sm mb-1 font-light">
+            <div className="space-y-1.5">
+              <Label htmlFor="confirmPassword" title="Confirmar Senha" className="text-sm font-light">
                 Confirmar senha
               </Label>
               <Input
                 type="password"
                 id="confirmPassword"
                 placeholder="••••••••"
-                className={`w-full rounded-xl transition-colors ${
-                  confirmPasswordError ? "border-destructive" : ""
-                }`}
+                className={`rounded-xl h-10 ${confirmPasswordError ? "border-destructive" : ""}`}
                 value={formData.confirmPassword}
                 onChange={handleChange}
-                aria-invalid={!!confirmPasswordError}
-                aria-describedby="confirm-password-error"
               />
               {confirmPasswordError && (
-                <p id="confirm-password-error" className="text-destructive text-xs mt-0.5">
-                  {confirmPasswordError}
-                </p>
+                <p className="text-destructive text-xs mt-1">{confirmPasswordError}</p>
               )}
             </div>
 
             <Button
               type="submit"
-              className="w-full rounded-full shadow-soft hover:shadow-bloom transition-all duration-300 mt-1"
+              className="w-full rounded-full h-11 shadow-soft hover:shadow-bloom transition-all duration-300 mt-2"
               disabled={loading}
             >
               {loading ? "Criando conta..." : "Criar conta"}
@@ -279,7 +257,7 @@ const Signup = () => {
             <Button
               type="button"
               variant="outline"
-              className="w-full rounded-full border-2"
+              className="w-full rounded-full h-10 border-2"
               onClick={handleGoogleSignUp}
               disabled={googleLoading}
             >
@@ -289,15 +267,15 @@ const Signup = () => {
                 <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
                 <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
               </svg>
-              {googleLoading ? "Entrando..." : "Continuar com Google"}
+              Continuar com Google
             </Button>
 
-            <div className="flex items-center justify-center gap-3 mt-2">
+            <div className="flex items-center justify-center gap-3 mt-4">
               <AvatarCircles avatarUrls={avatarUrls} numPeople={2847} />
               <span className="text-xs text-muted-foreground">mulheres florescendo</span>
             </div>
 
-            <div className="text-center text-muted-foreground text-sm mt-1">
+            <div className="text-center text-muted-foreground text-sm mt-2">
               Já tem conta?{" "}
               <Link to="/login" className="text-primary font-medium hover:underline transition-colors">
                 Entrar
@@ -305,7 +283,7 @@ const Signup = () => {
             </div>
           </form>
 
-          <div className="mt-2 text-center">
+          <div className="mt-6 text-center">
             <Link
               to="/"
               className="text-xs text-muted-foreground hover:text-primary transition-colors"
@@ -317,15 +295,15 @@ const Signup = () => {
 
         {/* Right side - Image panel */}
         <div 
-          className="relative md:w-1/2 h-[150px] shrink-0 md:h-auto md:min-h-[500px] bg-cover bg-center rounded-b-3xl md:rounded-r-3xl md:rounded-bl-none overflow-hidden order-1 md:order-2"
+          className="relative md:w-1/2 min-h-[200px] md:min-h-[600px] bg-cover bg-center order-1 md:order-2"
           style={{ backgroundImage: `url(${signupHero})` }}
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-accent/40 via-primary/30 to-secondary/40 backdrop-blur-[2px]"></div>
-          <div className="relative z-10 p-4 md:p-8 h-full flex flex-col justify-end text-white">
-            <h1 className="text-2xl md:text-3xl font-light leading-tight tracking-tight mb-2">
+          <div className="absolute inset-0 bg-gradient-to-br from-accent/40 via-primary/30 to-secondary/40 backdrop-blur-[1px]"></div>
+          <div className="relative z-10 p-8 h-full flex flex-col justify-end text-white">
+            <h1 className="text-3xl md:text-4xl font-light leading-tight tracking-tight mb-2">
               Comece sua jornada
             </h1>
-            <p className="text-base md:text-lg opacity-90 font-light">
+            <p className="text-lg opacity-90 font-light">
               Um espaço seguro para crescer e florescer.
             </p>
           </div>
@@ -342,7 +320,7 @@ const PasswordRule = ({ passed, label }: { passed: boolean; label: string }) => 
     ) : (
       <X className="h-3 w-3 text-muted-foreground" />
     )}
-    <span className={`text-xs ${passed ? "text-green-600" : "text-muted-foreground"}`}>
+    <span className={`text-[10px] ${passed ? "text-green-600" : "text-muted-foreground"}`}>
       {label}
     </span>
   </div>
