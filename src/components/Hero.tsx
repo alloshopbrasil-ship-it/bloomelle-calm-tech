@@ -37,7 +37,7 @@ const Hero = () => {
 
           <h1 className="text-4xl md:text-7xl lg:text-8xl font-light tracking-tight px-4">
             {t("landing.hero.headline1")}
-            <span className="block mt-2 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent font-normal">
+            <span className="block mt-2 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent font-normal pb-2">
               {t("landing.hero.headline2")}
             </span>
           </h1>
