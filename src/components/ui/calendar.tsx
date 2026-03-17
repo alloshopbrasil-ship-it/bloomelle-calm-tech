@@ -4,7 +4,6 @@ import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
 import { ptBR } from "date-fns/locale";
-import { format } from "date-fns";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
@@ -23,15 +22,20 @@ function Calendar({
       locale={ptBR}
       className={cn("p-3", className)}
       formatters={{
-        // Garante que o cabeçalho (mês e ano) seja renderizado em minúsculas
-        formatCaption: (date, options) => 
-          format(date, "MMMM yyyy", options).toLowerCase(),
+        formatCaption: (date) => {
+          const month = date.toLocaleString('pt-BR', { month: 'long' }).toLowerCase();
+          const year = date.getFullYear();
+          return `${month} ${year}`;
+        },
+        formatWeekdayName: (date) => {
+          return date.toLocaleString('pt-BR', { weekday: 'short' }).slice(0, 3).toLowerCase();
+        }
       }}
       classNames={{
-        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
-        month: "space-y-4",
-        caption: "flex justify-center pt-1 relative items-center",
-        caption_label: "text-sm font-medium text-foreground lowercase",
+        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0 justify-center",
+        month: "space-y-6",
+        caption: "flex justify-center pt-1 relative items-center mb-4",
+        caption_label: "text-sm font-medium text-gray-700",
         nav: "space-x-1 flex items-center",
         nav_button: cn(
           buttonVariants({ variant: "outline" }),
@@ -39,26 +43,21 @@ function Calendar({
         ),
         nav_button_previous: "absolute left-1",
         nav_button_next: "absolute right-1",
-        table: "w-full border-collapse space-y-1",
-        head_row: "flex",
-        head_cell:
-          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem] lowercase",
-        row: "flex w-full mt-2",
-        cell: "h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
+        table: "w-full border-collapse space-y-1 mx-auto",
+        head_row: "flex justify-between",
+        head_cell: "text-gray-400 w-10 font-normal text-[0.75rem] uppercase tracking-tighter text-center",
+        row: "flex w-full mt-2 justify-between",
+        cell: "h-10 w-10 text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
         day: cn(
-          buttonVariants({ variant: "ghost" }),
-          "h-9 w-9 p-0 font-normal aria-selected:opacity-100 rounded-none hover:bg-accent/50"
+          "h-10 w-10 p-0 font-normal aria-selected:opacity-100 flex items-center justify-center rounded-full transition-colors hover:bg-gray-50"
         ),
+        day_range_start: "day-range-start",
         day_range_end: "day-range-end",
-        // Estilização do Dia Selecionado: Fundo Lilás Quadrado + Círculo Rosa Centralizado
-        day_selected: 
-          "bg-[#F0E6FF] !text-white hover:bg-[#F0E6FF] focus:bg-[#F0E6FF] relative isolate " +
-          "after:content-[''] after:absolute after:w-8 after:h-8 after:bg-[#E58B8B] " +
-          "after:rounded-full after:top-1/2 after:left-1/2 after:-translate-x-1/2 " +
-          "after:-translate-y-1/2 after:z-[-1]",
-        day_today: "bg-accent text-accent-foreground",
+        day_selected:
+          "bg-[#E58B8B] text-white hover:bg-[#E58B8B] hover:text-white focus:bg-[#E58B8B] focus:text-white rounded-full shadow-sm",
+        day_today: "text-primary font-bold",
         day_outside:
-          "day-outside text-muted-foreground opacity-30 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
+          "day-outside text-muted-foreground opacity-50 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
         day_disabled: "text-muted-foreground opacity-50",
         day_range_middle:
           "aria-selected:bg-accent aria-selected:text-accent-foreground",
