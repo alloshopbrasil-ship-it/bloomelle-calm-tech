@@ -8,14 +8,13 @@ import { ProtectedRoute } from "./components/ProtectedRoute";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
 
-// Eagerly loaded routes
+// Eagerly loaded routes (critical path)
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import NotFound from "./pages/NotFound";
 
 // Lazy loaded routes
-const BloomelleDashboard = lazy(() => import("./pages/BloomelleDashboard"));
 const PlansPage = lazy(() => import("./pages/Plans"));
 const CommunityDashboard = lazy(() => import("./pages/CommunityDashboard"));
 const FeaturesPage = lazy(() => import("./pages/FeaturesPage"));
@@ -40,14 +39,19 @@ const MyGroups = lazy(() => import("./pages/MyGroups"));
 const SavedPosts = lazy(() => import("./pages/SavedPosts"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const PostView = lazy(() => import("./pages/PostView"));
+const ModernCalendarPage = lazy(() => import("./pages/ModernCalendarPage"));
+const CalendarDemo = lazy(() => import("./pages/CalendarDemo"));
 
 const queryClient = new QueryClient();
 
+// Component to scroll to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
+
   useEffect(() => {
     window.scrollTo(0, 0);
   }, [pathname]);
+
   return null;
 }
 
@@ -82,8 +86,9 @@ const App = () => (
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/help" element={<Help />} />
               <Route path="/terms" element={<Terms />} />
-              <Route path="/dashboard" element={<ProtectedRoute><BloomelleDashboard /></ProtectedRoute>} />
-              <Route path="/dashboard/old" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+              <Route path="/modern-calendar" element={<ModernCalendarPage />} />
+              <Route path="/calendar-demo" element={<CalendarDemo />} />
+              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/dashboard/practices" element={<ProtectedRoute><DailyTasks /></ProtectedRoute>} />
               <Route path="/dashboard/journal" element={<ProtectedRoute><Journal /></ProtectedRoute>} />
               <Route path="/dashboard/affirmations" element={<ProtectedRoute><Affirmations /></ProtectedRoute>} />
@@ -99,6 +104,7 @@ const App = () => (
               <Route path="/dashboard/saved" element={<ProtectedRoute><SavedPosts /></ProtectedRoute>} />
               <Route path="/community/groups" element={<ProtectedRoute><MyGroups /></ProtectedRoute>} />
               <Route path="/post/:postId" element={<PostView />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
               <Route path="*" element={<NotFound />} />
             </Routes>
           </Suspense>
