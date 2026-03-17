@@ -3,104 +3,72 @@
 import * as React from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { DayPicker } from "react-day-picker";
-import { ptBR, enUS, es, fr, de } from "date-fns/locale";
+import { ptBR } from "date-fns/locale";
+import { format } from "date-fns";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "@/components/ui/button";
-import { useLanguage, Language } from "@/contexts/LanguageContext";
 
 export type CalendarProps = React.ComponentProps<typeof DayPicker>;
-
-const localeMap: Record<Language, any> = {
-  pt: ptBR,
-  en: enUS,
-  es: es,
-  fr: fr,
-  de: de,
-};
 
 function Calendar({
   className,
   classNames,
   showOutsideDays = true,
-  components: userComponents,
   ...props
 }: CalendarProps) {
-  const { language } = useLanguage();
-  const locale = localeMap[language as Language] || ptBR;
-
-  const defaultClassNames = {
-    months: "relative flex flex-col sm:flex-row gap-4 w-full justify-center",
-    month: "w-full space-y-4 flex flex-col items-center",
-    month_caption: "relative flex h-10 items-center justify-center z-20 w-full mb-4",
-    caption_label: "text-base md:text-xl font-medium",
-    nav: "absolute top-0 flex w-full justify-between z-10 px-2",
-    button_previous: cn(
-      buttonVariants({ variant: "ghost" }),
-      "size-10 md:size-12 text-muted-foreground/80 hover:text-foreground p-0 rounded-full",
-    ),
-    button_next: cn(
-      buttonVariants({ variant: "ghost" }),
-      "size-10 md:size-12 text-muted-foreground/80 hover:text-foreground p-0 rounded-full",
-    ),
-    month_grid: "w-full border-collapse max-w-4xl mx-auto",
-    weekdays: "flex w-full justify-between",
-    weekday: "flex-1 p-0 text-xs md:text-sm font-medium text-muted-foreground/80 text-center uppercase tracking-wider",
-    week: "flex w-full mt-2 justify-between",
-    day: "flex-1 group p-0 text-sm md:text-base text-center relative flex justify-center",
-    day_button: cn(
-      "relative flex aspect-square w-full max-w-[60px] items-center justify-center whitespace-nowrap rounded-xl p-0 text-foreground outline-offset-2 transition-all duration-200",
-      "size-9 sm:size-11 md:size-14 lg:size-16", // Tamanho cresce conforme a tela
-      "hover:bg-primary/20 focus:outline-none focus-visible:z-10 focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring/70",
-      "group-data-[selected]:bg-primary group-data-[selected]:text-primary-foreground group-data-[selected]:shadow-bloom group-data-[selected]:scale-110",
-      "group-data-[disabled]:pointer-events-none group-data-[disabled]:text-foreground/30 group-data-[disabled]:line-through",
-      "group-data-[outside]:text-foreground/30"
-    ),
-    range_start: "range-start",
-    range_end: "range-end",
-    range_middle: "range-middle",
-    today: cn(
-      "relative after:pointer-events-none after:absolute after:bottom-2 after:start-1/2 after:z-10 after:size-[5px] after:-translate-x-1/2 after:rounded-full after:bg-primary after:transition-colors",
-      "group-data-[selected]:after:bg-white"
-    ),
-    outside: "text-muted-foreground data-selected:bg-accent/50 data-selected:text-muted-foreground",
-    hidden: "invisible",
-  };
-
-  const mergedClassNames: any = Object.keys(defaultClassNames).reduce(
-    (acc, key) => ({
-      ...acc,
-      [key]: classNames?.[key as keyof typeof classNames]
-        ? cn(
-            defaultClassNames[key as keyof typeof defaultClassNames],
-            classNames[key as keyof typeof classNames],
-          )
-        : defaultClassNames[key as keyof typeof defaultClassNames],
-    }),
-    {} as any,
-  );
-
-  const defaultComponents = {
-    Chevron: (props: any) => {
-      if (props.orientation === "left") {
-        return <ChevronLeft className="size-5 md:size-6" strokeWidth={2} {...props} aria-hidden="true" />;
-      }
-      return <ChevronRight className="size-5 md:size-6" strokeWidth={2} {...props} aria-hidden="true" />;
-    },
-  };
-
-  const mergedComponents = {
-    ...defaultComponents,
-    ...userComponents,
-  };
-
   return (
     <DayPicker
       showOutsideDays={showOutsideDays}
-      className={cn("w-full flex justify-center", className)}
-      classNames={mergedClassNames}
-      components={mergedComponents}
-      locale={locale}
+      locale={ptBR}
+      className={cn("p-3", className)}
+      formatters={{
+        // Garante que o cabeçalho (mês e ano) seja renderizado em minúsculas
+        formatCaption: (date, options) => 
+          format(date, "MMMM yyyy", options).toLowerCase(),
+      }}
+      classNames={{
+        months: "flex flex-col sm:flex-row space-y-4 sm:space-x-4 sm:space-y-0",
+        month: "space-y-4",
+        caption: "flex justify-center pt-1 relative items-center",
+        caption_label: "text-sm font-medium text-foreground lowercase",
+        nav: "space-x-1 flex items-center",
+        nav_button: cn(
+          buttonVariants({ variant: "outline" }),
+          "h-7 w-7 bg-transparent p-0 opacity-50 hover:opacity-100 border-none"
+        ),
+        nav_button_previous: "absolute left-1",
+        nav_button_next: "absolute right-1",
+        table: "w-full border-collapse space-y-1",
+        head_row: "flex",
+        head_cell:
+          "text-muted-foreground rounded-md w-9 font-normal text-[0.8rem] lowercase",
+        row: "flex w-full mt-2",
+        cell: "h-9 w-9 text-center text-sm p-0 relative focus-within:relative focus-within:z-20",
+        day: cn(
+          buttonVariants({ variant: "ghost" }),
+          "h-9 w-9 p-0 font-normal aria-selected:opacity-100 rounded-none hover:bg-accent/50"
+        ),
+        day_range_end: "day-range-end",
+        // Estilização do Dia Selecionado: Fundo Lilás Quadrado + Círculo Rosa Centralizado
+        day_selected: 
+          "bg-[#F0E6FF] !text-white hover:bg-[#F0E6FF] focus:bg-[#F0E6FF] relative isolate " +
+          "after:content-[''] after:absolute after:w-8 after:h-8 after:bg-[#E58B8B] " +
+          "after:rounded-full after:top-1/2 after:left-1/2 after:-translate-x-1/2 " +
+          "after:-translate-y-1/2 after:z-[-1]",
+        day_today: "bg-accent text-accent-foreground",
+        day_outside:
+          "day-outside text-muted-foreground opacity-30 aria-selected:bg-accent/50 aria-selected:text-muted-foreground aria-selected:opacity-30",
+        day_disabled: "text-muted-foreground opacity-50",
+        day_range_middle:
+          "aria-selected:bg-accent aria-selected:text-accent-foreground",
+        day_hidden: "invisible",
+        ...classNames,
+      }}
+      components={{
+        IconLeft: ({ ...props }) => <ChevronLeft className="h-4 w-4" />,
+        IconRight: ({ ...props }) => <ChevronRight className="h-4 w-4" />,
+      }}
       {...props}
     />
   );
