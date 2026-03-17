@@ -7,14 +7,13 @@ import { DailyEntry, UserStreak } from '@/types/bloomelle';
 import { useToast } from '@/hooks/use-toast';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
-import { isSameDay } from 'date-fns';
 
 const BloomelleDashboard = () => {
   const { toast } = useToast();
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
   
-  // Estado Global de Entradas (Sincronização)
+  // Estado Único de Entradas (Shared State)
   const [entries, setEntries] = useState<DailyEntry[]>([
     { id: '1', date: '2024-03-20', completed: true, imageUrl: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?w=400&h=400&fit=crop' }
   ]);
@@ -46,8 +45,8 @@ const BloomelleDashboard = () => {
     });
 
     toast({
-      title: "Registro salvo! ✨",
-      description: "Sua jornada visual foi atualizada em todos os calendários.",
+      title: "Momento registrado! ✨",
+      description: "Sua foto agora brilha em seus calendários.",
     });
   };
 
@@ -56,16 +55,16 @@ const BloomelleDashboard = () => {
       <Navbar />
       
       <main className="flex-1 pt-28 pb-24 px-4 md:px-8">
-        <div className="max-w-2xl mx-auto space-y-8">
+        <div className="max-w-2xl mx-auto space-y-6">
           
-          {/* Header Section */}
-          <header className="animate-fade-in px-2">
-            <h1 className="text-3xl font-light text-gray-800 lowercase">bom dia, admin 🌸</h1>
-            <p className="text-xs text-gray-400 uppercase tracking-widest font-bold mt-1">sua jornada de hoje</p>
+          {/* Header */}
+          <header className="px-2">
+            <h1 className="text-3xl font-light text-gray-800 lowercase">olá, bloomelle 🌸</h1>
+            <p className="text-[10px] text-gray-400 uppercase tracking-widest font-bold mt-1">seu progresso visual</p>
           </header>
 
-          {/* NOVO: Calendário Horizontal (Abaixo do Header, Acima do Streak) */}
-          <section className="animate-fade-in bg-white rounded-[32px] shadow-sm border border-gray-50 p-2" style={{ animationDelay: '50ms' }}>
+          {/* 1. Calendário Semanal (Entre Header e Streak) */}
+          <section className="bg-white rounded-[32px] shadow-sm border border-gray-50 p-4">
             <HorizontalWeeklyCalendar 
               entries={entries} 
               selectedDate={selectedDate} 
@@ -73,8 +72,8 @@ const BloomelleDashboard = () => {
             />
           </section>
 
-          {/* Streak Card (Mantido) */}
-          <section className="animate-fade-in" style={{ animationDelay: '100ms' }}>
+          {/* 2. Streak Card (Com ícone de Check) */}
+          <section>
             <StreakCard 
               currentStreak={streak.currentStreak}
               longestStreak={streak.longestStreak}
@@ -82,10 +81,10 @@ const BloomelleDashboard = () => {
             />
           </section>
 
-          {/* Calendário Mensal (Sincronizado) */}
-          <section className="animate-fade-in" style={{ animationDelay: '150ms' }}>
+          {/* 3. Calendário Mensal (Sincronizado) */}
+          <section>
             <div className="bg-white rounded-[40px] shadow-sm border border-gray-50 p-6">
-              <h2 className="text-[10px] text-gray-400 uppercase font-bold mb-6 ml-2 tracking-widest">visão mensal</h2>
+              <h2 className="text-[10px] text-gray-400 uppercase font-bold mb-4 ml-2 tracking-widest">jornada mensal</h2>
               <Calendar
                 mode="single"
                 selected={selectedDate}
@@ -95,8 +94,6 @@ const BloomelleDashboard = () => {
               />
             </div>
           </section>
-
-          {/* Outros cards existentes (Gráficos, etc) continuariam aqui */}
         </div>
       </main>
 
