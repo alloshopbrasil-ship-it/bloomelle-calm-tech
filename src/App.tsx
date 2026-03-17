@@ -39,6 +39,7 @@ const MyGroups = lazy(() => import("./pages/MyGroups"));
 const SavedPosts = lazy(() => import("./pages/SavedPosts"));
 const ResetPassword = lazy(() => import("./pages/ResetPassword"));
 const PostView = lazy(() => import("./pages/PostView"));
+const ModernCalendarPage = lazy(() => import("./pages/ModernCalendarPage"));
 
 const queryClient = new QueryClient();
 
@@ -84,6 +85,7 @@ const App = () => (
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/help" element={<Help />} />
               <Route path="/terms" element={<Terms />} />
+              <Route path="/modern-calendar" element={<ModernCalendarPage />} />
               <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
               <Route path="/dashboard/practices" element={<ProtectedRoute><DailyTasks /></ProtectedRoute>} />
               <Route path="/dashboard/journal" element={<ProtectedRoute><Journal /></ProtectedRoute>} />
