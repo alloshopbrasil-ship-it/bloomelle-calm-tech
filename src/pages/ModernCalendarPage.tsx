@@ -1,21 +1,25 @@
 "use client";
 
 import React from 'react';
-import ModernCalendar from '@/components/ModernCalendar';
+import MinimalistCalendar from '@/components/MinimalistCalendar';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 
 const ModernCalendarPage = () => {
   return (
-    <div className="min-h-screen bg-[#fafafa]">
+    <div className="min-h-screen bg-[#fafafa] flex flex-col">
       <Navbar />
-      <main className="pt-32 pb-20">
-        <div className="container mx-auto px-6">
+      <main className="flex-1 pt-32 pb-20 flex flex-col">
+        <div className="container mx-auto px-6 flex-1 flex flex-col">
           <div className="max-w-2xl mx-auto text-center mb-12">
-            <h1 className="text-4xl font-light text-gray-900 mb-4">Design Minimalista</h1>
-            <p className="text-gray-500">Um exemplo de interface limpa e funcional para o seu bem-estar.</p>
+            <h1 className="text-4xl font-light text-gray-900 mb-4">Calendário Minimalista</h1>
+            <p className="text-gray-500">Estrutura centralizada e design limpo para Março de 2026.</p>
           </div>
-          <ModernCalendar />
+          
+          {/* Container que deve centralizar o calendário */}
+          <div className="flex-1 bg-white rounded-[32px] shadow-sm border border-gray-100 overflow-hidden">
+            <MinimalistCalendar />
+          </div>
         </div>
       </main>
       <Footer />
