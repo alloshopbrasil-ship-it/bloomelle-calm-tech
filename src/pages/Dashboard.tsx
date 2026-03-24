@@ -17,10 +17,10 @@ import { DailyTipBalloon } from "@/components/DailyTipBalloon";
 import FinishDayButton from "@/components/FinishDayButton";
 import GoalsAchievementMap from "@/components/GoalsAchievementMap";
 import { supabase } from "@/integrations/supabase/client";
-import { StreakDisplay } from "@/components/StreakDisplay";
 import { useTrial } from "@/hooks/useTrial";
 import { TrialBanner } from "@/components/TrialBanner";
 import { usePopupManager } from "@/hooks/usePopupManager";
+import { DashboardWeeklyCalendar } from "@/components/DashboardWeeklyCalendar";
 
 // Popup components
 import { OriginPopup } from "@/components/OriginPopup";
@@ -263,14 +263,16 @@ const Dashboard = () => {
           </div>
         )}
 
+        {/* Weekly Horizontal Calendar */}
+        <div className="animate-fade-in" style={{ animationDelay: "30ms" }}>
+          <DashboardWeeklyCalendar 
+            completedDays={completedTasks === todayTasks.length && todayTasks.length > 0 ? [new Date()] : []} 
+          />
+        </div>
+
         <section className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Left column - Overview */}
           <div className="lg:col-span-2 space-y-6">
-            {/* Streak Display */}
-            <div className="animate-fade-in" style={{ animationDelay: "60ms" }}>
-              <StreakDisplay />
-            </div>
-
             {/* Daily Progress Bloomelle */}
             <div className="animate-fade-in" style={{ animationDelay: "50ms" }}>
               <DailyProgressBloomelle 

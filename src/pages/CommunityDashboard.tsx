@@ -27,6 +27,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 import { useCommunity } from "@/hooks/useCommunity";
 import { useToast } from "@/hooks/use-toast";
+import DashboardLayout from "@/components/DashboardLayout";
 
 export default function CommunityDashboard() {
   const { user } = useAuth();
@@ -147,57 +148,25 @@ export default function CommunityDashboard() {
   });
 
   return (
-    <div className="min-h-screen bg-background">
-      <div className="container mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 py-6">
-          {/* LEFT SIDEBAR */}
-          <aside className="hidden lg:block lg:col-span-3 space-y-4">
-            <Card className="p-4">
-              <nav className="space-y-2">
-                <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted/50 transition-colors">
-                  <Home className="w-5 h-5 text-muted-foreground" />
-                  <span className="font-medium">Dashboard</span>
-                </Link>
-                <Link to="/dashboard/community" className="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary">
-                  <Users className="w-5 h-5" />
-                  <span className="font-medium">Comunidade</span>
-                </Link>
-                <Link to="/dashboard/profile" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted/50 transition-colors">
-                  <User className="w-5 h-5 text-muted-foreground" />
-                  <span className="font-medium">Meu Perfil</span>
-                </Link>
-                <button onClick={() => navigate("/community/groups")} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted/50 transition-colors">
-                  <Users className="w-5 h-5 text-muted-foreground" />
-                  <span className="font-medium">Grupos</span>
-                </button>
-                <Separator className="my-3" />
-                <Link to="/dashboard/settings" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted/50 transition-colors">
-                  <Settings className="w-5 h-5 text-muted-foreground" />
-                  <span className="font-medium">Configurações</span>
-                </Link>
-                <Link to="/help" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted/50 transition-colors">
-                  <HelpCircle className="w-5 h-5 text-muted-foreground" />
-                  <span className="font-medium">Ajuda</span>
-                </Link>
-              </nav>
-            </Card>
-            {userPlan === "free" && (
-              <Card className="p-6 bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
-                <div className="text-center space-y-3">
-                  <div className="mx-auto w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
-                    <Crown className="w-6 h-6 text-primary" />
-                  </div>
-                  <h3 className="font-semibold">Torne-se Premium</h3>
-                  <p className="text-sm text-muted-foreground">Crie grupos, posts ilimitados e muito mais</p>
-                  <Button onClick={() => setShowPremiumPopup(true)} className="w-full" size="sm">Ver Planos</Button>
-                </div>
-              </Card>
-            )}
-          </aside>
-
-          {/* CENTER FEED */}
-          <main className="lg:col-span-6 space-y-6">
-            <Card className="p-3 sm:p-4">
+    <DashboardLayout title="Comunidade" hideChat>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        {/* CENTER FEED */}
+        <main className="lg:col-span-2 space-y-6">
+          <div className="flex gap-3 overflow-x-auto pb-2 -mx-4 px-4 sm:mx-0 sm:px-0 scrollbar-hide">
+            <Button variant="outline" className="bg-background flex-shrink-0" onClick={() => navigate("/dashboard/profile")}>
+              <User className="w-4 h-4 mr-2" />
+              Meu Perfil
+            </Button>
+            <Button variant="outline" className="bg-background flex-shrink-0" onClick={() => navigate("/community/groups")}>
+              <Users className="w-4 h-4 mr-2" />
+              Grupos
+            </Button>
+            <Button variant="outline" className="bg-background flex-shrink-0" onClick={() => navigate("/help")}>
+              <HelpCircle className="w-4 h-4 mr-2" />
+              Ajuda
+            </Button>
+          </div>
+          <Card className="p-3 sm:p-4">
               <div className="flex items-center gap-3 mb-4">
                 <Avatar className="w-10 h-10 sm:w-12 sm:h-12 flex-shrink-0">
                   <AvatarImage src={userProfile.avatar_url || user?.user_metadata?.avatar_url} />
@@ -268,7 +237,7 @@ export default function CommunityDashboard() {
           </main>
 
           {/* RIGHT SIDEBAR */}
-          <aside className="hidden lg:block lg:col-span-3 space-y-4">
+          <aside className="hidden lg:block lg:col-span-1 space-y-4">
             <GroupsList onGroupClick={(id) => navigate(`/community/groups/${id}`)} />
             <Card className="p-6">
               <h3 className="font-semibold text-lg mb-4 flex items-center gap-2"><Hash className="w-5 h-5 text-primary" />Filtrar por Tópico</h3>
@@ -296,13 +265,24 @@ export default function CommunityDashboard() {
                 ))}
               </div>
             </Card>
+            {userPlan === "free" && (
+              <Card className="p-6 bg-gradient-to-br from-primary/10 to-accent/10 border-primary/20">
+                <div className="text-center space-y-3">
+                  <div className="mx-auto w-12 h-12 bg-primary/20 rounded-full flex items-center justify-center">
+                    <Crown className="w-6 h-6 text-primary" />
+                  </div>
+                  <h3 className="font-semibold">Torne-se Premium</h3>
+                  <p className="text-sm text-muted-foreground">Crie grupos, posts ilimitados e muito mais</p>
+                  <Button onClick={() => setShowPremiumPopup(true)} className="w-full" size="sm">Ver Planos</Button>
+                </div>
+              </Card>
+            )}
           </aside>
         </div>
-      </div>
 
       <Button onClick={handleNewPostClick} className="fixed bottom-20 right-6 lg:bottom-6 w-14 h-14 rounded-full shadow-lg z-50" size="icon"><Plus className="w-6 h-6" /></Button>
       <NewPostDrawer open={newPostDrawerOpen} onOpenChange={setNewPostDrawerOpen} onPostCreated={handlePostCreated} />
       <PremiumUpgradePopup isOpen={showPremiumPopup} onClose={() => setShowPremiumPopup(false)} />
-    </div>
+    </DashboardLayout>
   );
 }

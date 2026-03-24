@@ -53,11 +53,11 @@ export function DashboardSidebar() {
     <>
       <Sidebar className="border-r border-border/40">
         <SidebarHeader className="p-6">
-          <Link to="/" className="flex items-center gap-2">
-            <div className="h-8 w-8 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center">
-              🌷
-            </div>
-            <span className="text-lg font-semibold">Bloomelle</span>
+          <Link
+            to="/"
+            className="text-2xl font-light tracking-wide hover:text-primary transition-colors text-foreground"
+          >
+            Bloomelle
           </Link>
         </SidebarHeader>
 

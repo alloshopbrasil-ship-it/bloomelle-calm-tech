@@ -8,9 +8,8 @@ import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Separator } from "@/components/ui/separator";
 import { Users, Lock, Plus, Crown, Settings, LogOut, TrendingUp, ArrowLeft, Home, User, HelpCircle } from "lucide-react";
-import { SidebarProvider } from "@/components/ui/sidebar";
-import Footer from "@/components/Footer";
 import { CreateGroupDrawer } from "@/components/CreateGroupDrawer";
+import DashboardLayout from "@/components/DashboardLayout";
 import { PremiumUpgradePopup } from "@/components/PremiumUpgradePopup";
 import { useToast } from "@/hooks/use-toast";
 import { Link, useNavigate } from "react-router-dom";
@@ -173,32 +172,23 @@ export default function MyGroups() {
 
   if (loading) {
     return (
-      <SidebarProvider>
-        <div className="min-h-screen flex w-full bg-background">
-          <CommunitySidebar />
-          <div className="flex-1 flex items-center justify-center">
-            <div className="animate-pulse text-muted-foreground">Carregando...</div>
-          </div>
+      <DashboardLayout title="Grupos" hideChat>
+        <div className="flex-1 flex items-center justify-center min-h-[50vh]">
+          <div className="animate-pulse text-muted-foreground">Carregando...</div>
         </div>
-      </SidebarProvider>
+      </DashboardLayout>
     );
   }
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
-        <CommunitySidebar />
+    <DashboardLayout title="Grupos" hideChat>
+      <div className="mb-6 flex items-center gap-4">
+        <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard/community")}>
+          <ArrowLeft className="w-5 h-5" />
+        </Button>
+      </div>
 
-        <div className="flex-1 flex flex-col">
-          {/* Header with back button */}
-          <header className="border-b border-border/40 bg-background/80 backdrop-blur-sm p-4 flex items-center gap-4">
-            <Button variant="ghost" size="icon" onClick={() => navigate("/dashboard/community")}>
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <h1 className="text-xl font-semibold">Grupos</h1>
-          </header>
-
-          <main className="flex-1 p-6 max-w-5xl mx-auto w-full">
+      <div className="max-w-5xl mx-auto w-full">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
               <div>
@@ -360,10 +350,6 @@ export default function MyGroups() {
                 </div>
               </TabsContent>
             </Tabs>
-          </main>
-
-          <Footer />
-        </div>
       </div>
 
       <CreateGroupDrawer
@@ -373,45 +359,6 @@ export default function MyGroups() {
       />
 
       <PremiumUpgradePopup isOpen={showPremiumPopup} onClose={() => setShowPremiumPopup(false)} />
-    </SidebarProvider>
-  );
-}
-
-// Community Sidebar Component
-function CommunitySidebar() {
-  const navigate = useNavigate();
-  
-  return (
-    <aside className="hidden lg:block w-64 border-r border-border/40 p-4 space-y-4">
-      <Card className="p-4">
-        <nav className="space-y-2">
-          <Link to="/dashboard" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted/50 transition-colors">
-            <Home className="w-5 h-5 text-muted-foreground" />
-            <span className="font-medium">Dashboard</span>
-          </Link>
-          <Link to="/dashboard/community" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted/50 transition-colors">
-            <Users className="w-5 h-5 text-muted-foreground" />
-            <span className="font-medium">Comunidade</span>
-          </Link>
-          <Link to="/dashboard/profile" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted/50 transition-colors">
-            <User className="w-5 h-5 text-muted-foreground" />
-            <span className="font-medium">Meu Perfil</span>
-          </Link>
-          <button onClick={() => navigate("/dashboard/groups")} className="w-full flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 text-primary">
-            <Users className="w-5 h-5" />
-            <span className="font-medium">Grupos</span>
-          </button>
-          <Separator className="my-3" />
-          <Link to="/dashboard/settings" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted/50 transition-colors">
-            <Settings className="w-5 h-5 text-muted-foreground" />
-            <span className="font-medium">Configurações</span>
-          </Link>
-          <Link to="/help" className="flex items-center gap-3 px-4 py-3 rounded-lg hover:bg-muted/50 transition-colors">
-            <HelpCircle className="w-5 h-5 text-muted-foreground" />
-            <span className="font-medium">Ajuda</span>
-          </Link>
-        </nav>
-      </Card>
-    </aside>
+    </DashboardLayout>
   );
 }

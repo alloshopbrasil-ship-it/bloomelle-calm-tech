@@ -12,6 +12,7 @@ interface DashboardLayoutProps {
   title: string;
   userPlan?: "free" | "premium";
   showFooter?: boolean;
+  hideChat?: boolean;
   className?: string;
   maxWidth?: string;
 }
@@ -21,6 +22,7 @@ const DashboardLayout = ({
   title,
   userPlan = "free",
   showFooter = true,
+  hideChat = false,
   className = "",
   maxWidth = "max-w-7xl",
 }: DashboardLayoutProps) => {
@@ -52,7 +54,7 @@ const DashboardLayout = ({
         <MobileBottomNav />
 
         {/* Bloomia AI Chat */}
-        <BloomiaChat />
+        {!hideChat && <BloomiaChat />}
       </div>
     </SidebarProvider>
   );

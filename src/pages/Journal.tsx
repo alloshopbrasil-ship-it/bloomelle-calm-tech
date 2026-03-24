@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Calendar } from "@/components/ui/calendar";
-import { BookOpen, Save, Crown, Sparkles } from "lucide-react";
+import { BookOpen, Save, Crown, Sparkles, ImagePlus, X, Loader2 } from "lucide-react";
 import { BloomiaJournalResponse } from "@/components/BloomiaJournalResponse";
 import DashboardLayout from "@/components/DashboardLayout";
 import { useAuth } from "@/contexts/AuthContext";
@@ -15,6 +15,8 @@ import { PremiumUpgradePopup } from "@/components/PremiumUpgradePopup";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { ToolWelcomePopup } from "@/components/ToolWelcomePopup";
 import { useToolWelcome } from "@/hooks/usePopupManager";
+import { uploadJournalImage } from "@/utils/imageUpload";
+import { useSearchParams } from "react-router-dom";
 
 const Journal = () => {
   const { user } = useAuth();
@@ -23,11 +25,20 @@ const Journal = () => {
   const { isPremium, canAddJournalEntry, currentMonthJournalCount, limits } = usePlanLimits();
   const { isOpen: showToolWelcome, closeToolWelcome } = useToolWelcome("journal");
   const userName = user?.user_metadata?.name || user?.email?.split('@')[0] || t("dashboard.welcome");
-  const [selectedDate, setSelectedDate] = useState<Date | undefined>(new Date());
+  
+  const [searchParams, setSearchParams] = useSearchParams();
+  const dateParam = searchParams.get('date');
+  
+  const [selectedDate, setSelectedDate] = useState<Date | undefined>(
+    dateParam ? new Date(dateParam + 'T12:00:00') : new Date()
+  );
   const [journalEntry, setJournalEntry] = useState("");
   const [journalTitle, setJournalTitle] = useState("");
-  const [entries, setEntries] = useState<Array<{ id: string; title: string | null; content: string; created_at: string }>>([]);
+  const [entries, setEntries] = useState<Array<{ id: string; title: string | null; content: string; created_at: string; images: string[] | null }>>([]);
   const [currentEntryId, setCurrentEntryId] = useState<string | null>(null);
+  const [images, setImages] = useState<string[]>([]);
+  const [pendingFiles, setPendingFiles] = useState<File[]>([]);
+  const [previewUrls, setPreviewUrls] = useState<string[]>([]);
   const [isSaving, setIsSaving] = useState(false);
   const [showPremiumPopup, setShowPremiumPopup] = useState(false);
   const [datesWithEntries, setDatesWithEntries] = useState<Date[]>([]);
@@ -51,7 +62,7 @@ const Journal = () => {
     
     const { data, error } = await supabase
       .from("journal_entries")
-      .select("id, title, content, created_at")
+      .select("id, title, content, created_at, images")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
 
@@ -80,18 +91,22 @@ const Journal = () => {
       setJournalTitle(data.title || "");
       setJournalEntry(data.content);
       setCurrentEntryId(data.id);
+      setImages(data.images || []);
     } else {
       setJournalTitle("");
       setJournalEntry("");
       setCurrentEntryId(null);
+      setImages([]);
     }
+    setPendingFiles([]);
+    setPreviewUrls([]);
   };
 
   const handleSaveEntry = async () => {
-    if (!user || !journalEntry.trim()) {
+    if (!user || (!journalEntry.trim() && pendingFiles.length === 0 && images.length === 0)) {
       toast({
         title: t("journal.writeFirst") || "Escreva algo primeiro 💫",
-        description: t("journal.waitingThoughts") || "Seu diário está esperando seus pensamentos.",
+        description: t("journal.waitingThoughts") || "Seu diário está esperando seus pensamentos ou fotos.",
         variant: "destructive",
       });
       return;
@@ -103,25 +118,38 @@ const Journal = () => {
     }
 
     setIsSaving(true);
-
+    
     try {
+      // Upload pending images
+      const uploadedUrls: string[] = [];
+      for (const file of pendingFiles) {
+        const url = await uploadJournalImage(file, user.id);
+        if (url) uploadedUrls.push(url);
+      }
+      
+      const finalImages = [...images, ...uploadedUrls];
+
       if (currentEntryId) {
         const { error } = await supabase
           .from("journal_entries")
           .update({
             title: journalTitle || null,
             content: journalEntry,
+            images: finalImages,
           })
           .eq("id", currentEntryId);
 
         if (error) throw error;
       } else {
+        const dateStr = selectedDate ? selectedDate.toISOString() : new Date().toISOString();
         const { error } = await supabase
           .from("journal_entries")
           .insert({
             user_id: user.id,
             title: journalTitle || null,
             content: journalEntry,
+            images: finalImages,
+            created_at: dateStr,
           });
 
         if (error) throw error;
@@ -134,6 +162,9 @@ const Journal = () => {
 
       setSavedContent(journalEntry);
       setShowBloomia(true);
+      setImages(finalImages);
+      setPendingFiles([]);
+      setPreviewUrls([]);
       loadEntries();
     } catch (error: any) {
       toast({
@@ -144,6 +175,25 @@ const Journal = () => {
     } finally {
       setIsSaving(false);
     }
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) {
+      const filesArray = Array.from(e.target.files);
+      setPendingFiles(prev => [...prev, ...filesArray]);
+      
+      const newPreviewUrls = filesArray.map(file => URL.createObjectURL(file));
+      setPreviewUrls(prev => [...prev, ...newPreviewUrls]);
+    }
+  };
+
+  const removePendingFile = (index: number) => {
+    setPendingFiles(prev => prev.filter((_, i) => i !== index));
+    setPreviewUrls(prev => prev.filter((_, i) => i !== index));
+  };
+  
+  const removeSavedImage = (index: number) => {
+    setImages(prev => prev.filter((_, i) => i !== index));
   };
 
   const hasEntryOnDate = (date: Date) => {
@@ -160,6 +210,15 @@ const Journal = () => {
       fr: 'fr-FR'
     };
     return locales[language] || locales.pt;
+  };
+
+  const handleSelectDate = (date: Date | undefined) => {
+    setSelectedDate(date);
+    if (date) {
+      setSearchParams({ date: date.toISOString().split('T')[0] });
+    } else {
+      setSearchParams({});
+    }
   };
 
   const placeholderTexts: Record<string, string> = {
@@ -221,15 +280,63 @@ const Journal = () => {
                 placeholder={placeholderTexts[language] || placeholderTexts.pt}
                 value={journalEntry}
                 onChange={(e) => setJournalEntry(e.target.value)}
-                className="min-h-[300px] md:min-h-[400px] resize-none text-base leading-relaxed border-none focus-visible:ring-0 bg-transparent"
+                className="min-h-[200px] md:min-h-[300px] resize-none text-base leading-relaxed border-none focus-visible:ring-0 bg-transparent"
               />
-              <div className="flex justify-end pt-4 border-t border-border/40">
+              
+              {/* Image Previews */}
+              {(images.length > 0 || previewUrls.length > 0) && (
+                <div className="flex flex-wrap gap-3 mt-4">
+                  {images.map((url, i) => (
+                    <div key={`saved-${i}`} className="relative w-24 h-24 rounded-lg overflow-hidden group">
+                      <img src={url} alt="Saved" className="w-full h-full object-cover" />
+                      <button 
+                        onClick={() => removeSavedImage(i)}
+                        className="absolute top-1 right-1 bg-black/50 hover:bg-red-500 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="w-4 h-4 text-white" />
+                      </button>
+                    </div>
+                  ))}
+                  {previewUrls.map((url, i) => (
+                    <div key={`pending-${i}`} className="relative w-24 h-24 rounded-lg overflow-hidden group">
+                      <img src={url} alt="Preview" className="w-full h-full object-cover opacity-80" />
+                      <button 
+                        onClick={() => removePendingFile(i)}
+                        className="absolute top-1 right-1 bg-black/50 hover:bg-red-500 rounded-full p-1 opacity-0 group-hover:opacity-100 transition-opacity"
+                      >
+                        <X className="w-4 h-4 text-white" />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+
+              <div className="flex items-center justify-between pt-4 border-t border-border/40">
+                <div>
+                  <input
+                    type="file"
+                    id="journal-image-upload"
+                    multiple
+                    accept="image/*"
+                    className="hidden"
+                    onChange={handleFileChange}
+                  />
+                  <Button
+                    variant="outline"
+                    className="rounded-full text-muted-foreground hover:text-primary"
+                    onClick={() => document.getElementById('journal-image-upload')?.click()}
+                  >
+                    <ImagePlus className="w-4 h-4 mr-2" />
+                    Adicionar fotos
+                  </Button>
+                </div>
+                
                 <Button
                   onClick={handleSaveEntry}
                   disabled={isSaving}
                   className="rounded-full"
                 >
-                  <Save className="w-4 h-4 mr-2" />
+                  {isSaving ? <Loader2 className="w-4 h-4 mr-2 animate-spin" /> : <Save className="w-4 h-4 mr-2" />}
                   {isSaving ? (t("journal.saving") || "Salvando...") : (t("journal.save"))}
                 </Button>
               </div>
@@ -253,7 +360,7 @@ const Journal = () => {
                 <Calendar
                   mode="single"
                   selected={selectedDate}
-                  onSelect={setSelectedDate}
+                  onSelect={handleSelectDate}
                   className="rounded-xl w-full"
                   modifiers={{
                     hasEntry: (date) => hasEntryOnDate(date),
@@ -281,7 +388,7 @@ const Journal = () => {
                       className="p-3 md:p-4 rounded-xl bg-muted/30 hover:bg-muted/50 transition-all cursor-pointer"
                       onClick={() => {
                         const date = new Date(entry.created_at);
-                        setSelectedDate(date);
+                        handleSelectDate(date);
                       }}
                     >
                       <p className="text-sm text-muted-foreground mb-1">

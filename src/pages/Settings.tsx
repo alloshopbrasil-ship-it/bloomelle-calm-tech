@@ -188,7 +188,7 @@ const Settings = () => {
   };
 
   return (
-    <DashboardLayout title={t("settings.title")} showFooter={true}>
+    <DashboardLayout title={t("settings.title")} showFooter={true} hideChat>
       {/* Header */}
       <div className="mb-6 md:mb-8 text-center animate-fade-in">
         <h2 className="text-2xl md:text-4xl font-light text-foreground mb-2">
