@@ -240,7 +240,7 @@ const Dashboard = () => {
       <DashboardLayout title="Dashboard" userPlan={userPlan}>
         {/* Greeting */}
         <div className="mb-8 animate-fade-in">
-          <div className="flex items-start justify-between">
+          <div className="flex flex-col items-center text-center md:flex-row md:items-start md:justify-between md:text-left">
             <div>
               <h2 className="text-3xl md:text-4xl font-light text-foreground mb-2">
                 {greeting.text}, {userName} {greeting.emoji}

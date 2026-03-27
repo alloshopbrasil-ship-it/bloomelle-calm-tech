@@ -4,6 +4,7 @@ import { Bell, Flame } from "lucide-react";
 import { SidebarTrigger } from "@/components/ui/sidebar";
 import { DashboardHeaderProfile } from "./DashboardHeaderProfile";
 import { useLanguage } from "@/contexts/LanguageContext";
+import Logo from "./Logo";
 import { useNavigate } from "react-router-dom";
 import { StreakModal } from "@/components/StreakModal";
 import { useStreak } from "@/hooks/useStreak";
@@ -32,7 +33,11 @@ export function DashboardHeader({ title, userPlan = "free" }: DashboardHeaderPro
           <SidebarTrigger />
         </div>
         <div className="flex items-center flex-1 justify-between">
-          <h1 className="text-lg font-semibold">{title}</h1>
+          <div className="flex items-center gap-2">
+            <Logo className="scale-90 md:scale-100" />
+            <span className="h-6 w-px bg-border/40 mx-2 hidden md:block" />
+            <h1 className="text-lg font-semibold truncate">{title}</h1>
+          </div>
           <div className="flex items-center gap-2 md:gap-3 ml-auto">
             <Button 
               variant="ghost" 

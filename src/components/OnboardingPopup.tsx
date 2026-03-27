@@ -131,8 +131,31 @@ export const OnboardingPopup = ({ isOpen, onClose }: OnboardingPopupProps) => {
     setPersonalizations(prev => ({ ...prev, [cardId]: option }));
   };
 
-  const handleComplete = () => {
+  const handleComplete = async () => {
+    let finalAvatarUrl = null;
+    if (selectedAvatar) {
+      const avatar = avatars.find(a => a.id === selectedAvatar);
+      finalAvatarUrl = avatar?.src || "";
+    }
+
+    // Save to database
+    if (user) {
+      await supabase
+        .from("profiles")
+        .update({
+          avatar_url: finalAvatarUrl,
+          updated_at: new Date().toISOString(),
+        })
+        .eq("id", user.id);
+    }
+
     localStorage.setItem("onboardingComplete", "true");
+    if (finalAvatarUrl) {
+      localStorage.setItem("profileImage", finalAvatarUrl);
+      window.dispatchEvent(new CustomEvent("profileImageUpdate"));
+    }
+    
+    // ... rest of preferences
     localStorage.setItem("userPreferences", JSON.stringify({
       namePreference,
       goal: selectedGoal,
@@ -460,7 +483,7 @@ export const OnboardingPopup = ({ isOpen, onClose }: OnboardingPopupProps) => {
         <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-accent/20 to-transparent rounded-full blur-2xl" />
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-[#E8DCC8]/10 rounded-full blur-3xl" />
         
-        <div className="relative z-10 p-6 md:p-8 overflow-y-auto max-h-[85vh] scrollbar-hide">
+        <div className="relative z-10 p-4 md:p-8 overflow-y-auto max-h-[90vh] scrollbar-hide">
           {/* Progress indicator */}
           <div className="flex justify-center gap-2 mb-6">
             {Array.from({ length: totalSteps }).map((_, i) => (

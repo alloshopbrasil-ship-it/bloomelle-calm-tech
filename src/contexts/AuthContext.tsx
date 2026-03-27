@@ -25,9 +25,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     // Set up auth state listener FIRST
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
+      async (event, session) => {
         setSession(session);
         setUser(session?.user ?? null);
+        
+        if (event === 'SIGNED_IN' && session?.user) {
+          syncGooglePhotoToProfile(session.user);
+        }
+        
         setLoading(false);
       }
     );
@@ -36,6 +41,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
       setUser(session?.user ?? null);
+      if (session?.user) {
+        syncGooglePhotoToProfile(session.user);
+      }
       setLoading(false);
     });
 
@@ -68,6 +76,28 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     return { error };
   };
 
+  const syncGooglePhotoToProfile = async (supabaseUser: User) => {
+    const googleAvatarUrl = supabaseUser.user_metadata?.avatar_url || supabaseUser.user_metadata?.picture;
+    if (googleAvatarUrl) {
+      // Check if profile already has an avatar
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('avatar_url')
+        .eq('id', supabaseUser.id)
+        .maybeSingle();
+      
+      if (profile && !profile.avatar_url) {
+        await supabase
+          .from('profiles')
+          .update({ avatar_url: googleAvatarUrl })
+          .eq('id', supabaseUser.id);
+        
+        localStorage.setItem("profileImage", googleAvatarUrl);
+        window.dispatchEvent(new CustomEvent("profileImageUpdate"));
+      }
+    }
+  };
+
   const signInWithGoogle = async () => {
     const { error } = await lovable.auth.signInWithOAuth('google', {
       redirect_uri: window.location.origin,
@@ -77,8 +107,15 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   const signOut = async () => {
-    await supabase.auth.signOut();
-    navigate('/login');
+    try {
+      await supabase.auth.signOut();
+    } catch (error) {
+      console.error("Error during sign out:", error);
+    } finally {
+      localStorage.clear();
+      sessionStorage.clear();
+      navigate('/login');
+    }
   };
 
   return (

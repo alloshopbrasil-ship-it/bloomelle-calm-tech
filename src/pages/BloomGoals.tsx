@@ -7,9 +7,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Trophy, Sparkles, Target, Star, Plus, Crown, Lock, Edit2, Share2 } from "lucide-react";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { DashboardSidebar } from "@/components/DashboardSidebar";
-import Footer from "@/components/Footer";
+import DashboardLayout from "@/components/DashboardLayout";
 import { useToast } from "@/hooks/use-toast";
 import { usePlanLimits } from "@/hooks/usePlanLimits";
 import { PremiumUpgradePopup } from "@/components/PremiumUpgradePopup";
@@ -258,222 +256,207 @@ const BloomGoals = () => {
   const completedGoals = goals.filter(g => g.is_completed);
 
   return (
-    <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-gradient-to-b from-background via-accent/5 to-primary/10">
-        <DashboardSidebar />
-        
-        <div className="flex-1 flex flex-col">
-          <header className="sticky top-0 z-10 border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-            <div className="flex h-16 items-center gap-4 px-6">
-              <SidebarTrigger />
-              <h1 className="text-lg font-semibold">{t("goals.title")}</h1>
+    <DashboardLayout title={t("goals.title")} userPlan={isPremium ? "premium" : "free"}>
+      <main className="flex-1 max-w-5xl mx-auto w-full pb-20 md:pb-8">
+        {/* Greeting */}
+        <div className="mb-8 text-center animate-fade-in">
+          <h2 className="text-3xl md:text-4xl font-light text-foreground mb-2">
+            {greeting.text}, {userName} {greeting.emoji}
+          </h2>
+          <p className="text-muted-foreground text-lg">
+            {subtitleTexts[language] || subtitleTexts.pt}
+          </p>
+          {!isPremium && (
+            <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm">
+              <Crown className="w-4 h-4" />
+              <span>{currentGoalsCount}/{limits.maxActiveGoals} {t("goals.activeGoals")}</span>
             </div>
-          </header>
+          )}
+        </div>
 
-          <main className="flex-1 p-6 max-w-5xl mx-auto w-full">
-            {/* Greeting */}
-            <div className="mb-8 text-center animate-fade-in">
-              <h2 className="text-3xl md:text-4xl font-light text-foreground mb-2">
-                {greeting.text}, {userName} {greeting.emoji}
-              </h2>
-              <p className="text-muted-foreground text-lg">
-                {subtitleTexts[language] || subtitleTexts.pt}
-              </p>
-              {!isPremium && (
-                <div className="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm">
-                  <Crown className="w-4 h-4" />
-                  <span>{currentGoalsCount}/{limits.maxActiveGoals} {t("goals.activeGoals")}</span>
+        {/* Level Card */}
+        <Card className="mb-6 rounded-2xl border-border/40 bg-gradient-to-br from-primary/10 to-accent/10 animate-fade-in">
+          <CardContent className="p-8">
+            <div className="flex items-center justify-between mb-4">
+              <div className="flex items-center gap-3">
+                <div className="p-3 bg-primary/20 rounded-full">
+                  <Trophy className="w-6 h-6 text-primary" />
                 </div>
-              )}
+                <div>
+                  <h3 className="text-2xl font-semibold">{t("goals.level") || "Nível"} {userLevel}</h3>
+                  <p className="text-sm text-muted-foreground">{getLevelName()}</p>
+                </div>
+              </div>
+              <div className="text-right">
+                <div className="text-3xl font-bold text-primary">{userXP}</div>
+                <div className="text-xs text-muted-foreground">{t("goals.of") || "de"} {nextLevelXP} XP</div>
+              </div>
             </div>
+            <Progress value={levelProgress} className="h-4" />
+            <p className="text-sm text-muted-foreground mt-2">
+              {nextLevelXP - userXP} XP {t("goals.toNextLevel") || "para o próximo nível"}
+            </p>
+          </CardContent>
+        </Card>
 
-            {/* Level Card */}
-            <Card className="mb-6 rounded-2xl border-border/40 bg-gradient-to-br from-primary/10 to-accent/10 animate-fade-in">
-              <CardContent className="p-8">
-                <div className="flex items-center justify-between mb-4">
-                  <div className="flex items-center gap-3">
-                    <div className="p-3 bg-primary/20 rounded-full">
-                      <Trophy className="w-6 h-6 text-primary" />
-                    </div>
-                    <div>
-                      <h3 className="text-2xl font-semibold">{t("goals.level") || "Nível"} {userLevel}</h3>
-                      <p className="text-sm text-muted-foreground">{getLevelName()}</p>
-                    </div>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-3xl font-bold text-primary">{userXP}</div>
-                    <div className="text-xs text-muted-foreground">{t("goals.of") || "de"} {nextLevelXP} XP</div>
-                  </div>
+        {/* Goals */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-4">
+            <h3 className="text-xl font-semibold flex items-center gap-2">
+              <Target className="w-5 h-5 text-primary" />
+              {t("goals.activeGoalsTitle") || "Metas Ativas"}
+            </h3>
+            <Button 
+              onClick={handleAddNewGoal}
+              size="sm" 
+              className="rounded-full"
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              {t("goals.newGoal")}
+            </Button>
+          </div>
+          
+          {loading ? (
+            <div className="text-center py-8">
+              <Sparkles className="w-8 h-8 text-primary mx-auto animate-pulse" />
+              <p className="text-muted-foreground mt-2">{t("common.loading")}</p>
+            </div>
+          ) : activeGoals.length === 0 ? (
+            <Card className="rounded-2xl border-border/40 bg-card animate-fade-in">
+              <CardContent className="p-8 text-center">
+                <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Target className="w-8 h-8 text-primary" />
                 </div>
-                <Progress value={levelProgress} className="h-4" />
-                <p className="text-sm text-muted-foreground mt-2">
-                  {nextLevelXP - userXP} XP {t("goals.toNextLevel") || "para o próximo nível"}
+                <h3 className="text-lg font-medium text-foreground mb-2">{t("goals.noGoals")} 🌱</h3>
+                <p className="text-muted-foreground mb-4">
+                  {t("goals.addFirst")}
                 </p>
+                <Button onClick={handleAddNewGoal} className="rounded-full">
+                  <Plus className="w-4 h-4 mr-2" />
+                  {t("goals.createFirst") || "Criar primeira meta"}
+                </Button>
               </CardContent>
             </Card>
-
-            {/* Goals */}
-            <div className="mb-8">
-              <div className="flex items-center justify-between mb-4">
-                <h3 className="text-xl font-semibold flex items-center gap-2">
-                  <Target className="w-5 h-5 text-primary" />
-                  {t("goals.activeGoalsTitle") || "Metas Ativas"}
-                </h3>
-                <Button 
-                  onClick={handleAddNewGoal}
-                  size="sm" 
-                  className="rounded-full"
+          ) : (
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              {activeGoals.map((goal, index) => (
+                <Card
+                  key={goal.id}
+                  className="rounded-2xl border-border/40 transition-all duration-500 hover:shadow-soft animate-fade-in bg-card cursor-pointer group"
+                  style={{ animationDelay: `${index * 100}ms` }}
+                  onClick={() => {
+                    setSelectedGoal(goal);
+                    setShowProgressDialog(true);
+                  }}
                 >
-                  <Plus className="w-4 h-4 mr-2" />
-                  {t("goals.newGoal")}
-                </Button>
-              </div>
-              
-              {loading ? (
-                <div className="text-center py-8">
-                  <Sparkles className="w-8 h-8 text-primary mx-auto animate-pulse" />
-                  <p className="text-muted-foreground mt-2">{t("common.loading")}</p>
-                </div>
-              ) : activeGoals.length === 0 ? (
-                <Card className="rounded-2xl border-border/40 bg-card animate-fade-in">
-                  <CardContent className="p-8 text-center">
-                    <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
-                      <Target className="w-8 h-8 text-primary" />
-                    </div>
-                    <h3 className="text-lg font-medium text-foreground mb-2">{t("goals.noGoals")} 🌱</h3>
-                    <p className="text-muted-foreground mb-4">
-                      {t("goals.addFirst")}
-                    </p>
-                    <Button onClick={handleAddNewGoal} className="rounded-full">
-                      <Plus className="w-4 h-4 mr-2" />
-                      {t("goals.createFirst") || "Criar primeira meta"}
-                    </Button>
-                  </CardContent>
-                </Card>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  {activeGoals.map((goal, index) => (
-                    <Card
-                      key={goal.id}
-                      className="rounded-2xl border-border/40 transition-all duration-500 hover:shadow-soft animate-fade-in bg-card cursor-pointer group"
-                      style={{ animationDelay: `${index * 100}ms` }}
-                      onClick={() => {
-                        setSelectedGoal(goal);
-                        setShowProgressDialog(true);
-                      }}
-                    >
-                      <CardContent className="p-6">
-                        <div className="flex items-start gap-3 mb-4">
-                          <div className="p-2 rounded-lg bg-primary/10">
-                            <Target className="w-5 h-5 text-primary" />
-                          </div>
-                          <div className="flex-1">
-                            <h4 className="font-semibold mb-1">{goal.title}</h4>
-                            {goal.description && (
-                              <p className="text-sm text-muted-foreground">{goal.description}</p>
-                            )}
-                          </div>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="opacity-0 group-hover:opacity-100 transition-opacity"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setSelectedGoal(goal);
-                              setShowProgressDialog(true);
-                            }}
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </Button>
-                        </div>
-                        <div className="space-y-2">
-                          <div className="flex items-center justify-between text-sm">
-                            <span className="text-muted-foreground">{t("goals.progress") || "Progresso"}</span>
-                            <span className="font-medium">{goal.progress}%</span>
-                          </div>
-                          <Progress value={goal.progress} className="h-2" />
-                          {goal.category && (
-                            <div className="text-xs text-muted-foreground">
-                              {t("goals.category") || "Categoria"}: {goal.category}
-                            </div>
-                          )}
-                        </div>
-                      </CardContent>
-                    </Card>
-                  ))}
-                </div>
-              )}
-            </div>
-
-            {/* Achievements */}
-            <div>
-              <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
-                <Star className="w-5 h-5 text-primary" />
-                {t("goals.achievements") || "Conquistas"}
-              </h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {achievements.map((achievement, index) => (
-                  <Card
-                    key={achievement.id}
-                    className={`rounded-2xl border-border/40 transition-all duration-500 animate-fade-in ${
-                      achievement.unlocked
-                        ? "bg-gradient-to-br from-primary/10 to-accent/10 hover:shadow-bloom"
-                        : "bg-muted/20 opacity-60"
-                    }`}
-                    style={{ animationDelay: `${(activeGoals.length + index) * 100}ms` }}
-                  >
-                    <CardContent className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-3">
-                          <div className="text-3xl">
-                            {achievement.unlocked ? "🏆" : "🔒"}
-                          </div>
-                          <div>
-                            <h4 className="font-semibold">{achievement.title}</h4>
-                            <p className="text-sm text-muted-foreground">{achievement.description}</p>
-                          </div>
-                        </div>
-                        {achievement.unlocked && (
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            onClick={() => {
-                              setSelectedAchievement({
-                                title: achievement.title,
-                                description: achievement.description,
-                                emoji: "🏆"
-                              });
-                              setShowShareDialog(true);
-                            }}
-                          >
-                            <Share2 className="w-4 h-4" />
-                          </Button>
+                  <CardContent className="p-6">
+                    <div className="flex items-start gap-3 mb-4">
+                      <div className="p-2 rounded-lg bg-primary/10">
+                        <Target className="w-5 h-5 text-primary" />
+                      </div>
+                      <div className="flex-1">
+                        <h4 className="font-semibold mb-1">{goal.title}</h4>
+                        {goal.description && (
+                          <p className="text-sm text-muted-foreground">{goal.description}</p>
                         )}
                       </div>
-                    </CardContent>
-                  </Card>
-                ))}
-              </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        className="opacity-0 group-hover:opacity-100 transition-opacity"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setSelectedGoal(goal);
+                          setShowProgressDialog(true);
+                        }}
+                      >
+                        <Edit2 className="w-4 h-4" />
+                      </Button>
+                    </div>
+                    <div className="space-y-2">
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-muted-foreground">{t("goals.progress") || "Progresso"}</span>
+                        <span className="font-medium">{goal.progress}%</span>
+                      </div>
+                      <Progress value={goal.progress} className="h-2" />
+                      {goal.category && (
+                        <div className="text-xs text-muted-foreground">
+                          {t("goals.category") || "Categoria"}: {goal.category}
+                        </div>
+                      )}
+                    </div>
+                  </CardContent>
+                </Card>
+              ))}
             </div>
-
-            {/* Call to Action */}
-            {goals.length > 0 && (
-              <div className="mt-8 text-center">
-                <Button
-                  size="lg"
-                  className="rounded-full px-8 shadow-soft hover:shadow-bloom transition-all duration-300"
-                  onClick={handleViewAllGoals}
-                >
-                  <Sparkles className="w-4 h-4 mr-2" />
-                  {t("goals.viewAll") || "Ver Todas as Metas"}
-                </Button>
-              </div>
-            )}
-          </main>
-
-          <Footer />
+          )}
         </div>
-      </div>
+
+        {/* Achievements */}
+        <div>
+          <h3 className="text-xl font-semibold mb-4 flex items-center gap-2">
+            <Star className="w-5 h-5 text-primary" />
+            {t("goals.achievements") || "Conquistas"}
+          </h3>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {achievements.map((achievement, index) => (
+              <Card
+                key={achievement.id}
+                className={`rounded-2xl border-border/40 transition-all duration-500 animate-fade-in ${
+                  achievement.unlocked
+                    ? "bg-gradient-to-br from-primary/10 to-accent/10 hover:shadow-bloom"
+                    : "bg-muted/20 opacity-60"
+                }`}
+                style={{ animationDelay: `${(activeGoals.length + index) * 100}ms` }}
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-3">
+                      <div className="text-3xl">
+                        {achievement.unlocked ? "🏆" : "🔒"}
+                      </div>
+                      <div>
+                        <h4 className="font-semibold">{achievement.title}</h4>
+                        <p className="text-sm text-muted-foreground">{achievement.description}</p>
+                      </div>
+                    </div>
+                    {achievement.unlocked && (
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => {
+                          setSelectedAchievement({
+                            title: achievement.title,
+                            description: achievement.description,
+                            emoji: "🏆"
+                          });
+                          setShowShareDialog(true);
+                        }}
+                      >
+                        <Share2 className="w-4 h-4" />
+                      </Button>
+                    )}
+                  </div>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </div>
+
+        {/* Call to Action */}
+        {goals.length > 0 && (
+          <div className="mt-8 text-center">
+            <Button
+              size="lg"
+              className="rounded-full px-8 shadow-soft hover:shadow-bloom transition-all duration-300"
+              onClick={handleViewAllGoals}
+            >
+              <Sparkles className="w-4 h-4 mr-2" />
+              {t("goals.viewAll") || "Ver Todas as Metas"}
+            </Button>
+          </div>
+        )}
+      </main>
 
       {/* Create Goal Dialog */}
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
@@ -551,7 +534,7 @@ const BloomGoals = () => {
         onOpenChange={setShowShareDialog}
         achievement={selectedAchievement}
       />
-    </SidebarProvider>
+    </DashboardLayout>
   );
 };
 

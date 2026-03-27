@@ -31,8 +31,8 @@ All colors MUST be HSL.
     --muted: 340 30% 96%;
     --muted-foreground: 340 15% 55%;
 
-    /* Accent - Soft lilac hint */
-    --accent: 270 35% 88%;
+    /* Accent - Soft pink hint */
+    --accent: 350 40% 92%;
     --accent-foreground: 340 20% 30%;
 
     --destructive: 0 60% 60%;
@@ -47,7 +47,7 @@ All colors MUST be HSL.
     /* Bloomelle Gradients - Serene & Warm */
     --gradient-dashboard: linear-gradient(180deg, hsl(340 100% 98%) 0%, hsl(30 50% 95%) 100%);
     --gradient-radial: radial-gradient(circle at 50% 20%, hsl(350 100% 97%) 0%, hsl(340 100% 98%) 100%);
-    --gradient-bloom: linear-gradient(135deg, hsl(350 70% 92%) 0%, hsl(270 40% 94%) 100%);
+    --gradient-bloom: linear-gradient(135deg, hsl(350 70% 92%) 0%, hsl(340 40% 94%) 100%);
     --gradient-calm: linear-gradient(180deg, hsl(340 100% 98%) 0%, hsl(350 60% 95%) 100%);
     --gradient-rose-cream: linear-gradient(135deg, hsl(350 80% 94%) 0%, hsl(30 60% 96%) 100%);
     --gradient-blush-white: linear-gradient(to right, hsl(350 100% 95%) 0%, hsl(0 0% 100%) 100%);
@@ -100,7 +100,7 @@ All colors MUST be HSL.
     --muted: 330 8% 16%;
     --muted-foreground: 340 12% 65%;
 
-    --accent: 270 25% 55%;
+    --accent: 350 25% 55%;
     --accent-foreground: 340 20% 90%;
 
     --destructive: 0 55% 55%;
@@ -113,7 +113,7 @@ All colors MUST be HSL.
     /* Dark mode gradients - matte, not shiny */
     --gradient-dashboard: linear-gradient(180deg, hsl(330 10% 8%) 0%, hsl(330 10% 10%) 100%);
     --gradient-radial: radial-gradient(circle at 50% 20%, hsl(330 10% 11%) 0%, hsl(330 10% 8%) 100%);
-    --gradient-bloom: linear-gradient(135deg, hsl(330 12% 11%) 0%, hsl(270 15% 13%) 100%);
+    --gradient-bloom: linear-gradient(135deg, hsl(330 12% 11%) 0%, hsl(350 15% 13%) 100%);
     --gradient-rose-cream: linear-gradient(135deg, hsl(330 10% 10%) 0%, hsl(30 8% 12%) 100%);
     --sidebar-background: 330 10% 7%;
     --sidebar-foreground: 340 15% 88%;
@@ -177,7 +177,7 @@ All colors MUST be HSL.
     left: -5%;
     width: 50%;
     height: 50%;
-    background: radial-gradient(circle, hsl(270 50% 88% / 0.06) 0%, transparent 65%);
+    background: radial-gradient(circle, hsl(350 50% 88% / 0.06) 0%, transparent 65%);
     pointer-events: none;
     z-index: 0;
   }

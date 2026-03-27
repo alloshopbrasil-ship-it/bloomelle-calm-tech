@@ -93,10 +93,10 @@ export const DashboardHeaderProfile = () => {
             </Avatar>
             <div className="flex-1 min-w-0">
               <PopoverTitle className="truncate">
-                {user?.email?.split('@')[0] || 'Usuária'}
+                Julia
               </PopoverTitle>
               <PopoverDescription className="text-xs truncate">
-                {user?.email || 'user@bloomelle.com'}
+                julia@bloomelle.com
               </PopoverDescription>
             </div>
           </div>

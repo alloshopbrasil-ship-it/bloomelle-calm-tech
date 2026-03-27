@@ -3,6 +3,7 @@ import { Home, Sparkles, BookOpen, Heart, Users, BarChart3, Menu } from "lucide-
 import { cn } from "@/lib/utils";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { useState } from "react";
+import Logo from "./Logo";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { Calendar, TrendingUp, Bookmark, Settings, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -93,10 +94,7 @@ const MobileBottomNav = () => {
             <SheetContent side="bottom" className="rounded-t-3xl pb-8">
               <div className="pt-4">
                 <div className="flex items-center gap-2 mb-6 px-2">
-                  <div className="h-8 w-8 rounded-full bg-gradient-to-r from-primary/20 to-secondary/20 flex items-center justify-center">
-                    🌷
-                  </div>
-                  <span className="text-lg font-semibold">Bloomelle</span>
+                  <Logo />
                 </div>
 
                 <div className="grid grid-cols-3 gap-3">

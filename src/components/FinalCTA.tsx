@@ -21,16 +21,16 @@ const FinalCTA = () => {
                 {t("landing.finalCta.title2")}
               </span>
             </h2>
-            
+
             <p className="text-base md:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed px-4">
               {t("landing.finalCta.subtitle")}
             </p>
           </div>
 
           <div className="pt-4 md:pt-8 flex justify-center px-4">
-            <Button 
+            <Button
               asChild
-              size="lg" 
+              size="lg"
               className="group bg-primary hover:bg-primary/90 text-primary-foreground px-6 sm:px-8 md:px-12 py-5 sm:py-6 md:py-8 text-sm sm:text-lg md:text-xl rounded-full shadow-bloom transition-all duration-300 md:hover:scale-105 w-full sm:w-auto whitespace-normal text-center leading-tight"
             >
               <Link to="/signup">

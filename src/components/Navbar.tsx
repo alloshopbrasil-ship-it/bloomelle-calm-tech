@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Menu, X } from "lucide-react";
 import { useLanguage } from "@/contexts/LanguageContext";
+import Logo from "./Logo";
 
 const Navbar = () => {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -44,9 +45,9 @@ const Navbar = () => {
         <div className="flex items-center justify-between">
           <Link
             to="/"
-            className="text-2xl font-light tracking-wide hover:text-primary transition-colors text-foreground"
+            className="hover:scale-105 transition-all duration-300"
           >
-            Bloomelle
+            <Logo />
           </Link>
 
           {/* Desktop Navigation */}

@@ -13,6 +13,21 @@ Deno.serve(async (req) => {
   try {
     const supabaseUrl = Deno.env.get("SUPABASE_URL")!;
     const serviceRoleKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+    const adminSecret = Deno.env.get('ADMIN_SECRET');
+
+    // Check for admin secret in headers
+    const authHeader = req.headers.get('x-admin-secret');
+    if (!adminSecret || authHeader !== adminSecret) {
+      console.warn('Unauthorized access attempt to expire-trials');
+      return new Response(
+        JSON.stringify({ error: 'Unauthorized' }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+          status: 401 
+        }
+      );
+    }
+
     const supabase = createClient(supabaseUrl, serviceRoleKey);
 
     // Find expired trials still marked as premium

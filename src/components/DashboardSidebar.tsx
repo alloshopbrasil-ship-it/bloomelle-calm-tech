@@ -16,6 +16,7 @@ import {
 import { useAuth } from "@/contexts/AuthContext";
 import { useLanguage } from "@/contexts/LanguageContext";
 import { LogoutConfirmationDialog } from "@/components/LogoutConfirmationDialog";
+import Logo from "./Logo";
 
 export function DashboardSidebar() {
   const location = useLocation();
@@ -54,10 +55,10 @@ export function DashboardSidebar() {
       <Sidebar className="border-r border-border/40">
         <SidebarHeader className="p-6">
           <Link
-            to="/"
-            className="text-2xl font-light tracking-wide hover:text-primary transition-colors text-foreground"
+            to="/dashboard"
+            className="hover:scale-105 transition-all duration-300"
           >
-            Bloomelle
+            <Logo />
           </Link>
         </SidebarHeader>
 

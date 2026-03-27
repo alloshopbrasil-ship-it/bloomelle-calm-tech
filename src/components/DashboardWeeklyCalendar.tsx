@@ -46,7 +46,7 @@ export const DashboardWeeklyCalendar = ({ completedDays = [] }: DashboardWeeklyC
   }, [user]);
 
   return (
-    <div className="w-full flex justify-between items-center py-2 px-1 mb-6">
+    <div className="w-full grid grid-cols-7 gap-1 items-center py-2 px-0 mb-6 sm:px-1 sm:gap-2">
       {weekDays.map((day) => {
         const isToday = isSameDay(day, today);
         const isCompleted = completedDays.some(d => isSameDay(d, day));
@@ -61,7 +61,7 @@ export const DashboardWeeklyCalendar = ({ completedDays = [] }: DashboardWeeklyC
             key={day.toString()} 
             onClick={() => navigate(`/dashboard/journal?date=${format(day, 'yyyy-MM-dd')}`)}
             className={cn(
-              "flex flex-col items-center justify-center rounded-[24px] py-2 px-1 transition-all min-w-[54px] hover:bg-muted group/daybtn",
+              "flex flex-col items-center justify-center rounded-[24px] py-2 px-0 transition-all w-full hover:bg-muted group/daybtn",
               isToday ? "border-[1.5px] border-primary/20 shadow-sm bg-background" : "border-[1.5px] border-transparent"
             )}
           >

@@ -304,7 +304,7 @@ export function SharePostDrawer({ open, onOpenChange, postId, postContent }: Sha
                           </AvatarFallback>
                         </Avatar>
                         <div className="flex-1 text-left">
-                          <p className="font-medium">{conv.participant_name || "Usuária"}</p>
+                          <p className="font-medium">{conv.participant_name || "Julia"}</p>
                         </div>
                         {isSelected && (
                           <div className="w-6 h-6 bg-primary rounded-full flex items-center justify-center">

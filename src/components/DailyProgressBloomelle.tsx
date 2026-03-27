@@ -70,7 +70,7 @@ export function DailyProgressBloomelle({
               max={dailyLimit}
               min={0}
               value={tasksCompleted}
-              gaugePrimaryColor={userPlan === "premium" ? "hsl(270 60% 75%)" : "hsl(350 50% 70%)"}
+              gaugePrimaryColor={userPlan === "premium" ? "hsl(330 60% 70%)" : "hsl(350 50% 70%)"}
               gaugeSecondaryColor="hsl(350 25% 90%)"
               className="size-48"
             />

@@ -39,7 +39,7 @@ const Footer = () => {
         <div className="grid md:grid-cols-3 gap-12">
           {/* Brand */}
           <div className="space-y-4">
-            <h3 className="text-2xl font-light tracking-tight">
+            <h3 className="text-2xl font-normal tracking-tight text-black font-sans">
               Bloomelle
             </h3>
             <p className="text-sm opacity-90 leading-relaxed">
