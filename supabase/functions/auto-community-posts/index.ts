@@ -240,9 +240,9 @@ Deno.serve(async (req) => {
 
   } catch (error) {
     console.error('Erro na função auto-community-posts:', error);
-    const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+    console.error('auto-community-posts error detail:', error instanceof Error ? error.message : error);
     return new Response(
-      JSON.stringify({ error: errorMessage }),
+      JSON.stringify({ error: 'An unexpected error occurred.' }),
       { 
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         status: 500 
