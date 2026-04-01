@@ -549,6 +549,13 @@ export type Database = {
             referencedRelation: "community_posts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "moderation_flags_reported_post_id_fkey"
+            columns: ["reported_post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       moods: {
@@ -683,6 +690,13 @@ export type Database = {
             referencedRelation: "community_posts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "post_comments_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       post_likes: {
@@ -712,6 +726,13 @@ export type Database = {
             referencedRelation: "community_posts"
             referencedColumns: ["id"]
           },
+          {
+            foreignKeyName: "post_likes_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts_safe"
+            referencedColumns: ["id"]
+          },
         ]
       }
       post_saves: {
@@ -739,6 +760,13 @@ export type Database = {
             columns: ["post_id"]
             isOneToOne: false
             referencedRelation: "community_posts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "post_saves_post_id_fkey"
+            columns: ["post_id"]
+            isOneToOne: false
+            referencedRelation: "community_posts_safe"
             referencedColumns: ["id"]
           },
         ]
@@ -838,6 +866,57 @@ export type Database = {
       }
     }
     Views: {
+      community_posts_safe: {
+        Row: {
+          comments_count: number | null
+          content: string | null
+          created_at: string | null
+          flag_reason: string | null
+          id: string | null
+          image_url: string | null
+          is_anonymous: boolean | null
+          is_flagged: boolean | null
+          likes_count: number | null
+          mood_emoji: string | null
+          saves_count: number | null
+          topic: string | null
+          user_id: string | null
+          visibility: string | null
+        }
+        Insert: {
+          comments_count?: number | null
+          content?: string | null
+          created_at?: string | null
+          flag_reason?: string | null
+          id?: string | null
+          image_url?: string | null
+          is_anonymous?: boolean | null
+          is_flagged?: boolean | null
+          likes_count?: number | null
+          mood_emoji?: string | null
+          saves_count?: number | null
+          topic?: string | null
+          user_id?: never
+          visibility?: string | null
+        }
+        Update: {
+          comments_count?: number | null
+          content?: string | null
+          created_at?: string | null
+          flag_reason?: string | null
+          id?: string | null
+          image_url?: string | null
+          is_anonymous?: boolean | null
+          is_flagged?: boolean | null
+          likes_count?: number | null
+          mood_emoji?: string | null
+          saves_count?: number | null
+          topic?: string | null
+          user_id?: never
+          visibility?: string | null
+        }
+        Relationships: []
+      }
       profiles_public: {
         Row: {
           avatar_url: string | null
@@ -867,6 +946,25 @@ export type Database = {
       }
     }
     Functions: {
+      get_safe_community_posts: {
+        Args: never
+        Returns: {
+          comments_count: number
+          content: string
+          created_at: string
+          flag_reason: string
+          id: string
+          image_url: string
+          is_anonymous: boolean
+          is_flagged: boolean
+          likes_count: number
+          mood_emoji: string
+          saves_count: number
+          topic: string
+          user_id: string
+          visibility: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]

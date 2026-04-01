@@ -33,12 +33,14 @@ export default function PostView() {
       .single();
 
     if (data) {
-      const { data: profile } = await supabase
+      // Mask user_id for anonymous posts
+      const safeUserId = data.is_anonymous ? null : data.user_id;
+      const profile = safeUserId ? (await supabase
         .from("profiles_public")
         .select("name, avatar_url, is_anonymous")
-        .eq("id", data.user_id)
-        .single();
-      setPost({ ...data, profiles: profile });
+        .eq("id", safeUserId)
+        .single()).data : null;
+      setPost({ ...data, user_id: safeUserId, profiles: data.is_anonymous ? { name: null, avatar_url: null, is_anonymous: true } : profile });
     }
     setLoading(false);
   };
