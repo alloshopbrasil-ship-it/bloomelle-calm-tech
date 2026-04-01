@@ -118,7 +118,9 @@ export function useCommunity() {
 
       // Calculate relevance score for popular tab
       const postsWithProfiles = postsData.map((post) => {
-        const profile = profilesData?.find((p) => p.id === post.user_id);
+        // Mask user_id for anonymous posts (defense in depth)
+        const safeUserId = post.is_anonymous ? null : post.user_id;
+        const profile = safeUserId ? profilesData?.find((p) => p.id === safeUserId) : null;
         
         // Emotional relevance score
         const timeDiff = (Date.now() - new Date(post.created_at).getTime()) / (1000 * 60 * 60);
@@ -128,6 +130,7 @@ export function useCommunity() {
 
         return {
           ...post,
+          user_id: safeUserId,
           profiles: post.is_anonymous ? { name: null, avatar_url: null, is_anonymous: true } : profile || null,
           isLiked: userLikes.has(post.id),
           isSaved: userSaves.has(post.id),
