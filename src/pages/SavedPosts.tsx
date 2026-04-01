@@ -90,19 +90,21 @@ export default function SavedPosts() {
         return;
       }
 
-      const userIds = [...new Set(postsData.map((p) => p.user_id))];
-      const { data: profilesData } = await supabase
+      const userIds = [...new Set(postsData.filter(p => !p.is_anonymous).map((p) => p.user_id))];
+      const { data: profilesData } = userIds.length > 0 ? await supabase
         .from("profiles_public")
         .select("id, name, avatar_url, is_anonymous")
-        .in("id", userIds);
+        .in("id", userIds) : { data: [] };
 
       const postsWithProfiles = postIds
         .map((id) => {
           const post = postsData.find((p) => p.id === id);
           if (!post) return null;
-          const profile = profilesData?.find((p) => p.id === post.user_id);
+          const safeUserId = post.is_anonymous ? null : post.user_id;
+          const profile = safeUserId ? profilesData?.find((p) => p.id === safeUserId) : null;
           return {
             ...post,
+            user_id: safeUserId,
             profiles: post.is_anonymous
               ? { name: null, avatar_url: null, is_anonymous: true }
               : profile || null,
