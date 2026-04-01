@@ -77,7 +77,7 @@ export default function SavedPosts() {
       const postIds = saves.map((s) => s.post_id);
 
       const { data: postsData, error } = await supabase
-        .from("community_posts_safe" as any)
+        .from("community_posts")
         .select("*")
         .in("id", postIds)
         .eq("is_flagged", false);
