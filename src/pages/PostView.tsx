@@ -27,7 +27,7 @@ export default function PostView() {
     if (!postId) return;
     setLoading(true);
     const { data } = await supabase
-      .from("community_posts")
+      .from("community_posts_safe" as any)
       .select("*")
       .eq("id", postId)
       .single();

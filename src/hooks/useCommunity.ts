@@ -76,7 +76,7 @@ export function useCommunity() {
 
     try {
       let query = supabase
-        .from("community_posts")
+        .from("community_posts_safe" as any)
         .select("*")
         .eq("is_flagged", false);
 

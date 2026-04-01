@@ -113,7 +113,7 @@ export default function UserProfile() {
     if (!user) return;
 
     const { data } = await supabase
-      .from("community_posts")
+      .from("community_posts_safe" as any)
       .select("*")
       .eq("user_id", user.id)
       .order("created_at", { ascending: false });
