@@ -101,7 +101,7 @@ export default function UserProfile() {
     if (saves && saves.length > 0) {
       const postIds = saves.map((s) => s.post_id);
       const { data: posts } = await supabase
-        .from("community_posts")
+        .from("community_posts_safe" as any)
         .select("*")
         .in("id", postIds);
 
