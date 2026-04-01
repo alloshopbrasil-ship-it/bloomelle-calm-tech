@@ -946,6 +946,25 @@ export type Database = {
       }
     }
     Functions: {
+      get_safe_community_posts: {
+        Args: never
+        Returns: {
+          comments_count: number
+          content: string
+          created_at: string
+          flag_reason: string
+          id: string
+          image_url: string
+          is_anonymous: boolean
+          is_flagged: boolean
+          likes_count: number
+          mood_emoji: string
+          saves_count: number
+          topic: string
+          user_id: string
+          visibility: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
