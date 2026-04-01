@@ -109,12 +109,12 @@ export function useCommunity() {
         return;
       }
 
-      // Get profiles
-      const userIds = [...new Set(postsData.map((p) => p.user_id))];
-      const { data: profilesData } = await supabase
+      // Get profiles only for non-anonymous posts
+      const userIds = [...new Set(postsData.filter(p => !p.is_anonymous).map((p) => p.user_id))];
+      const { data: profilesData } = userIds.length > 0 ? await supabase
         .from("profiles_public")
         .select("id, name, avatar_url, is_anonymous")
-        .in("id", userIds);
+        .in("id", userIds) : { data: [] };
 
       // Calculate relevance score for popular tab
       const postsWithProfiles = postsData.map((post) => {
