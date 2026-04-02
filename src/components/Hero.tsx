@@ -3,22 +3,49 @@ import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import heroImage from "@/assets/hero-bloom.jpg";
 import { useLanguage } from "@/contexts/LanguageContext";
+import { useEffect, useRef, useState } from "react";
 
 const Hero = () => {
   const navigate = useNavigate();
   const { t } = useLanguage();
+  const [visible, setVisible] = useState(false);
+  const parallaxRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 100);
+    return () => clearTimeout(timer);
+  }, []);
+
+  // Subtle parallax on background image
+  useEffect(() => {
+    const handleScroll = () => {
+      if (parallaxRef.current) {
+        const scrollY = window.scrollY;
+        parallaxRef.current.style.transform = `translateY(${scrollY * 0.2}px)`;
+      }
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId);
     element?.scrollIntoView({ behavior: "smooth" });
   };
 
+  const stagger = (index: number) => ({
+    opacity: visible ? 1 : 0,
+    transform: visible ? "translateY(0)" : "translateY(40px)",
+    transition: `opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1) ${index * 0.15}s, transform 0.8s cubic-bezier(0.22, 1, 0.36, 1) ${index * 0.15}s`,
+  });
+
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
       <div className="absolute inset-0 -z-10">
         <div 
-          className="absolute inset-0 bg-cover bg-center md:opacity-40 opacity-30"
-          style={{ backgroundImage: `url(${heroImage})` }}
+          ref={parallaxRef}
+          className="absolute inset-0 bg-cover bg-center md:opacity-40 opacity-30 will-change-transform"
+          style={{ backgroundImage: `url(${heroImage})`, height: "120%" }}
         />
         <div className="absolute inset-0 bg-gradient-to-b from-primary/20 via-accent/10 to-background md:from-background/50 md:via-background/80 md:to-background" />
       </div>
@@ -30,23 +57,35 @@ const Hero = () => {
       </div>
 
       <div className="container mx-auto px-4 md:px-6 py-20 text-center">
-        <div className="max-w-4xl mx-auto space-y-6 md:space-y-8 animate-fade-in">
-          <p className="text-xs md:text-sm uppercase tracking-widest text-muted-foreground font-light px-4">
+        <div className="max-w-4xl mx-auto space-y-6 md:space-y-8">
+          <p 
+            className="text-xs md:text-sm uppercase tracking-widest text-muted-foreground font-light px-4"
+            style={stagger(0)}
+          >
             {t("landing.hero.tagline")}
           </p>
 
-          <h1 className="text-4xl md:text-7xl lg:text-8xl font-light tracking-tight px-4">
+          <h1 
+            className="text-4xl md:text-7xl lg:text-8xl font-light tracking-tight px-4"
+            style={stagger(1)}
+          >
             {t("landing.hero.headline1")}
             <span className="block mt-2 pb-2 md:pb-4 bg-gradient-to-r from-primary via-accent to-secondary bg-clip-text text-transparent font-normal">
               {t("landing.hero.headline2")}
             </span>
           </h1>
 
-          <p className="text-base md:text-xl lg:text-2xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed px-4">
+          <p 
+            className="text-base md:text-xl lg:text-2xl text-muted-foreground max-w-2xl mx-auto font-light leading-relaxed px-4"
+            style={stagger(2)}
+          >
             {t("landing.hero.subtitle")}
           </p>
 
-          <div className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center pt-6 md:pt-8 px-4">
+          <div 
+            className="flex flex-col sm:flex-row gap-3 md:gap-4 justify-center items-center pt-6 md:pt-8 px-4"
+            style={stagger(3)}
+          >
             <Button 
               size="lg"
               onClick={() => navigate("/signup")}
@@ -67,7 +106,10 @@ const Hero = () => {
             </Button>
           </div>
 
-          <p className="text-xs md:text-sm text-muted-foreground pt-6 md:pt-8 font-light px-4">
+          <p 
+            className="text-xs md:text-sm text-muted-foreground pt-6 md:pt-8 font-light px-4"
+            style={stagger(4)}
+          >
             {t("landing.hero.trust")}
           </p>
         </div>
