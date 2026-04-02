@@ -17,9 +17,10 @@ const SplashScreen = ({ onFinish }: SplashScreenProps) => {
 
   return (
     <div
-      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-primary transition-opacity duration-500 ${
+      className={`fixed inset-0 z-[9999] flex flex-col items-center justify-center transition-opacity duration-500 ${
         phase === "exit" ? "opacity-0" : "opacity-100"
       }`}
+      style={{ background: "linear-gradient(135deg, hsl(350 100% 95%) 0%, hsl(340 60% 92%) 50%, hsl(30 50% 95%) 100%)" }}
     >
       <img
         src={bloomelleIcon}
@@ -29,7 +30,7 @@ const SplashScreen = ({ onFinish }: SplashScreenProps) => {
         }`}
       />
       <span
-        className={`mt-3 text-2xl font-light tracking-wider text-primary-foreground transition-all duration-700 delay-200 ${
+        className={`mt-3 text-2xl font-light tracking-wider text-foreground transition-all duration-700 delay-200 ${
           phase === "enter" ? "translate-y-4 opacity-0" : "translate-y-0 opacity-100"
         }`}
       >
