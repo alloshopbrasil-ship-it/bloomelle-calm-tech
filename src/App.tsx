@@ -3,10 +3,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Routes, Route, useLocation } from "react-router-dom";
-import { useEffect, lazy, Suspense } from "react";
+import { useEffect, lazy, Suspense, useState, useCallback } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import { ProtectedRoute } from "./components/ProtectedRoute";
 import { LanguageProvider } from "./contexts/LanguageContext";
 import { ThemeProvider } from "./contexts/ThemeContext";
+import SplashScreen from "./components/SplashScreen";
 
 // Eagerly loaded routes (critical path)
 import Index from "./pages/Index";
@@ -44,14 +46,9 @@ const CalendarDemo = lazy(() => import("./pages/CalendarDemo"));
 
 const queryClient = new QueryClient();
 
-// Component to scroll to top on route change
 function ScrollToTop() {
   const { pathname } = useLocation();
-
-  useEffect(() => {
-    window.scrollTo(0, 0);
-  }, [pathname]);
-
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
   return null;
 }
 
@@ -64,54 +61,84 @@ const LazyFallback = () => (
   </div>
 );
 
-const App = () => (
-  <QueryClientProvider client={queryClient}>
-    <ThemeProvider>
-      <LanguageProvider>
-        <TooltipProvider>
-          <Toaster />
-          <Sonner />
-          <ScrollToTop />
-          <Suspense fallback={<LazyFallback />}>
-            <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route path="/reset-password" element={<ResetPassword />} />
-              <Route path="/plans" element={<PlansPage />} />
-              <Route path="/features" element={<FeaturesPage />} />
-              <Route path="/community" element={<BloomSpaces />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/contact" element={<Contact />} />
-              <Route path="/privacy" element={<Privacy />} />
-              <Route path="/help" element={<Help />} />
-              <Route path="/terms" element={<Terms />} />
-              <Route path="/modern-calendar" element={<ModernCalendarPage />} />
-              <Route path="/calendar-demo" element={<CalendarDemo />} />
-              <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
-              <Route path="/dashboard/practices" element={<ProtectedRoute><DailyTasks /></ProtectedRoute>} />
-              <Route path="/dashboard/journal" element={<ProtectedRoute><Journal /></ProtectedRoute>} />
-              <Route path="/dashboard/affirmations" element={<ProtectedRoute><Affirmations /></ProtectedRoute>} />
-              <Route path="/dashboard/progress" element={<ProtectedRoute><BloomGoals /></ProtectedRoute>} />
-              <Route path="/dashboard/emotional-progress" element={<ProtectedRoute><EmotionalProgress /></ProtectedRoute>} />
-              <Route path="/dashboard/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
-              <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-              <Route path="/dashboard/community" element={<ProtectedRoute><CommunityDashboard /></ProtectedRoute>} />
-              <Route path="/dashboard/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
-              <Route path="/dashboard/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
-              <Route path="/dashboard/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
-              <Route path="/dashboard/groups" element={<ProtectedRoute><MyGroups /></ProtectedRoute>} />
-              <Route path="/dashboard/saved" element={<ProtectedRoute><SavedPosts /></ProtectedRoute>} />
-              <Route path="/community/groups" element={<ProtectedRoute><MyGroups /></ProtectedRoute>} />
-              <Route path="/post/:postId" element={<PostView />} />
-              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </Suspense>
-        </TooltipProvider>
-      </LanguageProvider>
-    </ThemeProvider>
-  </QueryClientProvider>
-);
+const pageVariants = {
+  initial: { opacity: 0 },
+  animate: { opacity: 1, transition: { duration: 0.3, ease: "easeOut" as const } },
+  exit: { opacity: 0, transition: { duration: 0.2, ease: "easeIn" as const } },
+};
+
+function AnimatedRoutes() {
+  const location = useLocation();
+
+  return (
+    <AnimatePresence mode="wait">
+      <motion.div
+        key={location.pathname}
+        variants={pageVariants}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        className="min-h-screen"
+      >
+        <Routes location={location}>
+          <Route path="/" element={<Index />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
+          <Route path="/plans" element={<PlansPage />} />
+          <Route path="/features" element={<FeaturesPage />} />
+          <Route path="/community" element={<BloomSpaces />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/privacy" element={<Privacy />} />
+          <Route path="/help" element={<Help />} />
+          <Route path="/terms" element={<Terms />} />
+          <Route path="/modern-calendar" element={<ModernCalendarPage />} />
+          <Route path="/calendar-demo" element={<CalendarDemo />} />
+          <Route path="/dashboard" element={<ProtectedRoute><Dashboard /></ProtectedRoute>} />
+          <Route path="/dashboard/practices" element={<ProtectedRoute><DailyTasks /></ProtectedRoute>} />
+          <Route path="/dashboard/journal" element={<ProtectedRoute><Journal /></ProtectedRoute>} />
+          <Route path="/dashboard/affirmations" element={<ProtectedRoute><Affirmations /></ProtectedRoute>} />
+          <Route path="/dashboard/progress" element={<ProtectedRoute><BloomGoals /></ProtectedRoute>} />
+          <Route path="/dashboard/emotional-progress" element={<ProtectedRoute><EmotionalProgress /></ProtectedRoute>} />
+          <Route path="/dashboard/calendar" element={<ProtectedRoute><CalendarPage /></ProtectedRoute>} />
+          <Route path="/dashboard/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
+          <Route path="/dashboard/community" element={<ProtectedRoute><CommunityDashboard /></ProtectedRoute>} />
+          <Route path="/dashboard/profile" element={<ProtectedRoute><UserProfile /></ProtectedRoute>} />
+          <Route path="/dashboard/messages" element={<ProtectedRoute><Messages /></ProtectedRoute>} />
+          <Route path="/dashboard/notifications" element={<ProtectedRoute><Notifications /></ProtectedRoute>} />
+          <Route path="/dashboard/groups" element={<ProtectedRoute><MyGroups /></ProtectedRoute>} />
+          <Route path="/dashboard/saved" element={<ProtectedRoute><SavedPosts /></ProtectedRoute>} />
+          <Route path="/community/groups" element={<ProtectedRoute><MyGroups /></ProtectedRoute>} />
+          <Route path="/post/:postId" element={<PostView />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </motion.div>
+    </AnimatePresence>
+  );
+}
+
+const App = () => {
+  const [showSplash, setShowSplash] = useState(true);
+  const handleSplashFinish = useCallback(() => setShowSplash(false), []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <ThemeProvider>
+        <LanguageProvider>
+          <TooltipProvider>
+            <Toaster />
+            <Sonner />
+            {showSplash && <SplashScreen onFinish={handleSplashFinish} />}
+            <ScrollToTop />
+            <Suspense fallback={<LazyFallback />}>
+              <AnimatedRoutes />
+            </Suspense>
+          </TooltipProvider>
+        </LanguageProvider>
+      </ThemeProvider>
+    </QueryClientProvider>
+  );
+};
 
 export default App;
