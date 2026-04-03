@@ -204,14 +204,24 @@ const Signup = () => {
               <Label htmlFor="password" title="Senha" className="text-sm font-light">
                 Criar senha
               </Label>
-              <Input
-                type="password"
-                id="password"
-                placeholder="••••••••"
-                className={`rounded-xl h-10 ${passwordErrors.length > 0 ? "border-destructive" : ""}`}
-                value={formData.password}
-                onChange={handleChange}
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  placeholder="••••••••"
+                  className={`rounded-xl h-10 pr-10 ${passwordErrors.length > 0 ? "border-destructive" : ""}`}
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
               {formData.password.length > 0 && (
                 <div className="mt-2 space-y-1">
                   <PasswordRule passed={!passwordStrength.errors.includes("min8")} label="Mínimo 8 caracteres" />
