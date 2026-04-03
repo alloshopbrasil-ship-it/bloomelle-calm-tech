@@ -236,14 +236,24 @@ const Signup = () => {
               <Label htmlFor="confirmPassword" title="Confirmar Senha" className="text-sm font-light">
                 Confirmar senha
               </Label>
-              <Input
-                type="password"
-                id="confirmPassword"
-                placeholder="••••••••"
-                className={`rounded-xl h-10 ${confirmPasswordError ? "border-destructive" : ""}`}
-                value={formData.confirmPassword}
-                onChange={handleChange}
-              />
+              <div className="relative">
+                <Input
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  placeholder="••••••••"
+                  className={`rounded-xl h-10 pr-10 ${confirmPasswordError ? "border-destructive" : ""}`}
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  tabIndex={-1}
+                >
+                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
               {confirmPasswordError && (
                 <p className="text-destructive text-xs mt-1">{confirmPasswordError}</p>
               )}

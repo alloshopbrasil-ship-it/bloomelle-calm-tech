@@ -207,15 +207,25 @@ const Login = () => {
                   Esqueceu sua senha?
                 </button>
               </div>
-              <Input
-                type="password"
-                id="password"
-                placeholder="••••••••"
-                className={`rounded-xl h-11 ${passwordError ? "border-destructive" : ""}`}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isLockedOut}
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  placeholder="••••••••"
+                  className={`rounded-xl h-11 pr-10 ${passwordError ? "border-destructive" : ""}`}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLockedOut}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
               {passwordError && (
                 <p className="text-destructive text-xs mt-1">{passwordError}</p>
               )}
