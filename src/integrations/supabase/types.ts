@@ -871,7 +871,6 @@ export type Database = {
           comments_count: number | null
           content: string | null
           created_at: string | null
-          flag_reason: string | null
           id: string | null
           image_url: string | null
           is_anonymous: boolean | null
@@ -887,7 +886,6 @@ export type Database = {
           comments_count?: number | null
           content?: string | null
           created_at?: string | null
-          flag_reason?: string | null
           id?: string | null
           image_url?: string | null
           is_anonymous?: boolean | null
@@ -903,7 +901,6 @@ export type Database = {
           comments_count?: number | null
           content?: string | null
           created_at?: string | null
-          flag_reason?: string | null
           id?: string | null
           image_url?: string | null
           is_anonymous?: boolean | null
@@ -924,7 +921,6 @@ export type Database = {
           id: string | null
           is_anonymous: boolean | null
           name: string | null
-          plan_type: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -932,7 +928,6 @@ export type Database = {
           id?: string | null
           is_anonymous?: boolean | null
           name?: string | null
-          plan_type?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -940,7 +935,6 @@ export type Database = {
           id?: string | null
           is_anonymous?: boolean | null
           name?: string | null
-          plan_type?: string | null
         }
         Relationships: []
       }
