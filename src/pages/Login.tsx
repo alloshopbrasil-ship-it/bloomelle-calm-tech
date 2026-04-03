@@ -1,10 +1,11 @@
 import { useState, useEffect } from "react";
+
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sparkles } from "lucide-react";
+import { Sparkles, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import loginHero from "@/assets/login-hero.jpg";
 import { ForgotPasswordDialog } from "@/components/ForgotPasswordDialog";
@@ -29,6 +30,7 @@ const Login = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [loginAttempts, setLoginAttempts] = useState(0);
   const [lockoutUntil, setLockoutUntil] = useState<number | null>(null);
@@ -205,15 +207,25 @@ const Login = () => {
                   Esqueceu sua senha?
                 </button>
               </div>
-              <Input
-                type="password"
-                id="password"
-                placeholder="••••••••"
-                className={`rounded-xl h-11 ${passwordError ? "border-destructive" : ""}`}
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                disabled={isLockedOut}
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  placeholder="••••••••"
+                  className={`rounded-xl h-11 pr-10 ${passwordError ? "border-destructive" : ""}`}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  disabled={isLockedOut}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
               {passwordError && (
                 <p className="text-destructive text-xs mt-1">{passwordError}</p>
               )}

@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sparkles, Check, X } from "lucide-react";
+import { Sparkles, Check, X, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import signupHero from "@/assets/signup-hero.jpg";
 import { AvatarCircles } from "@/components/ui/avatar-circles";
@@ -33,6 +33,8 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showEmailVerification, setShowEmailVerification] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const avatarUrls = [authWoman2, sphereWoman1, sphereWoman2, authWoman1];
 
@@ -202,14 +204,24 @@ const Signup = () => {
               <Label htmlFor="password" title="Senha" className="text-sm font-light">
                 Criar senha
               </Label>
-              <Input
-                type="password"
-                id="password"
-                placeholder="••••••••"
-                className={`rounded-xl h-10 ${passwordErrors.length > 0 ? "border-destructive" : ""}`}
-                value={formData.password}
-                onChange={handleChange}
-              />
+              <div className="relative">
+                <Input
+                  type={showPassword ? "text" : "password"}
+                  id="password"
+                  placeholder="••••••••"
+                  className={`rounded-xl h-10 pr-10 ${passwordErrors.length > 0 ? "border-destructive" : ""}`}
+                  value={formData.password}
+                  onChange={handleChange}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword(!showPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  tabIndex={-1}
+                >
+                  {showPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
               {formData.password.length > 0 && (
                 <div className="mt-2 space-y-1">
                   <PasswordRule passed={!passwordStrength.errors.includes("min8")} label="Mínimo 8 caracteres" />
@@ -224,14 +236,24 @@ const Signup = () => {
               <Label htmlFor="confirmPassword" title="Confirmar Senha" className="text-sm font-light">
                 Confirmar senha
               </Label>
-              <Input
-                type="password"
-                id="confirmPassword"
-                placeholder="••••••••"
-                className={`rounded-xl h-10 ${confirmPasswordError ? "border-destructive" : ""}`}
-                value={formData.confirmPassword}
-                onChange={handleChange}
-              />
+              <div className="relative">
+                <Input
+                  type={showConfirmPassword ? "text" : "password"}
+                  id="confirmPassword"
+                  placeholder="••••••••"
+                  className={`rounded-xl h-10 pr-10 ${confirmPasswordError ? "border-destructive" : ""}`}
+                  value={formData.confirmPassword}
+                  onChange={handleChange}
+                />
+                <button
+                  type="button"
+                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  tabIndex={-1}
+                >
+                  {showConfirmPassword ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+                </button>
+              </div>
               {confirmPasswordError && (
                 <p className="text-destructive text-xs mt-1">{confirmPasswordError}</p>
               )}
