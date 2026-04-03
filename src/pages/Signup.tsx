@@ -33,6 +33,8 @@ const Signup = () => {
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
   const [showEmailVerification, setShowEmailVerification] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   const avatarUrls = [authWoman2, sphereWoman1, sphereWoman2, authWoman1];
 
