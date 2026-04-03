@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Sparkles, Check, X } from "lucide-react";
+import { Sparkles, Check, X, Eye, EyeOff } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 import signupHero from "@/assets/signup-hero.jpg";
 import { AvatarCircles } from "@/components/ui/avatar-circles";
