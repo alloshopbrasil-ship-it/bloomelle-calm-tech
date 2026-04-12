@@ -1,0 +1,16 @@
+{
+	"folders": [
+		{
+			"path": "../bloomelle-calm-tech-main"
+		},
+		{
+			"path": "."
+		},
+		{
+			"path": "../src"
+		},
+		{
+			"path": "../supabase"
+		}
+	]
+}

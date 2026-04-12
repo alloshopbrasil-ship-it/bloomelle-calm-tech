@@ -1,0 +1,277 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Bloomelle Design System - Calm, Elegant & Feminine */
+    
+    /* Base Colors - Soft blush and cream tones */
+    --background: 340 100% 98%;
+    --foreground: 340 20% 30%;
+
+    --card: 340 100% 99%;
+    --card-foreground: 340 20% 30%;
+
+    --popover: 340 100% 99%;
+    --popover-foreground: 340 20% 30%;
+
+    /* Primary - Soft rose/blush */
+    --primary: 350 60% 70%;
+    --primary-foreground: 0 0% 100%;
+    
+    /* Secondary - Warm beige/cream */
+    --secondary: 30 40% 90%;
+    --secondary-foreground: 340 20% 30%;
+
+    --muted: 340 30% 96%;
+    --muted-foreground: 340 15% 55%;
+
+    /* Accent - Soft pink hint */
+    --accent: 350 40% 92%;
+    --accent-foreground: 340 20% 30%;
+
+    --destructive: 0 60% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 340 20% 92%;
+    --input: 340 20% 94%;
+    --ring: 350 60% 70%;
+
+    --radius: 1.5rem;
+    
+    /* Bloomelle Gradients - Serene & Warm */
+    --gradient-dashboard: linear-gradient(180deg, hsl(340 100% 98%) 0%, hsl(30 50% 95%) 100%);
+    --gradient-radial: radial-gradient(circle at 50% 20%, hsl(350 100% 97%) 0%, hsl(340 100% 98%) 100%);
+    --gradient-bloom: linear-gradient(135deg, hsl(350 70% 92%) 0%, hsl(340 40% 94%) 100%);
+    --gradient-calm: linear-gradient(180deg, hsl(340 100% 98%) 0%, hsl(350 60% 95%) 100%);
+    --gradient-rose-cream: linear-gradient(135deg, hsl(350 80% 94%) 0%, hsl(30 60% 96%) 100%);
+    --gradient-blush-white: linear-gradient(to right, hsl(350 100% 95%) 0%, hsl(0 0% 100%) 100%);
+    
+    /* Shadows - Soft pastel depth */
+    --shadow-soft: 0 2px 16px -2px hsl(350 40% 80% / 0.12);
+    --shadow-bloom: 0 6px 24px -6px hsl(350 50% 70% / 0.15);
+    --shadow-card: 0 2px 12px -2px hsl(340 30% 85% / 0.10);
+    --shadow-depth: 0 8px 32px -8px hsl(350 45% 75% / 0.18);
+    
+    /* Transitions - Smooth & gentle */
+    --transition-smooth: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    --transition-bloom: all 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    --transition-gentle: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    /* Dark mode - Matte black, elegant and readable */
+    --background: 330 10% 8%;
+    --foreground: 340 20% 90%;
+
+    --card: 330 10% 11%;
+    --card-foreground: 340 20% 90%;
+
+    --popover: 330 10% 11%;
+    --popover-foreground: 340 20% 90%;
+
+    --primary: 350 55% 68%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 30 15% 18%;
+    --secondary-foreground: 340 20% 90%;
+
+    --muted: 330 8% 16%;
+    --muted-foreground: 340 12% 65%;
+
+    --accent: 350 25% 55%;
+    --accent-foreground: 340 20% 90%;
+
+    --destructive: 0 55% 55%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 330 8% 20%;
+    --input: 330 8% 15%;
+    --ring: 350 55% 68%;
+    
+    /* Dark mode gradients - matte, not shiny */
+    --gradient-dashboard: linear-gradient(180deg, hsl(330 10% 8%) 0%, hsl(330 10% 10%) 100%);
+    --gradient-radial: radial-gradient(circle at 50% 20%, hsl(330 10% 11%) 0%, hsl(330 10% 8%) 100%);
+    --gradient-bloom: linear-gradient(135deg, hsl(330 12% 11%) 0%, hsl(350 15% 13%) 100%);
+    --gradient-rose-cream: linear-gradient(135deg, hsl(330 10% 10%) 0%, hsl(30 8% 12%) 100%);
+    --sidebar-background: 330 10% 7%;
+    --sidebar-foreground: 340 15% 88%;
+    --sidebar-primary: 350 55% 68%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 330 8% 14%;
+    --sidebar-accent-foreground: 340 15% 88%;
+    --sidebar-border: 330 8% 18%;
+    --sidebar-ring: 350 55% 68%;
+  }
+}
+
+@layer utilities {
+  /* Gradient utilities */
+  .bg-gradient-primary {
+    background: linear-gradient(135deg, hsl(var(--primary)) 0%, hsl(350 70% 75%) 100%);
+  }
+  
+  .bg-gradient-dashboard {
+    background: var(--gradient-dashboard);
+  }
+  
+  .shadow-elegant {
+    box-shadow: var(--shadow-bloom);
+  }
+  
+  .shadow-glow {
+    box-shadow: 0 0 40px hsl(var(--primary) / 0.4);
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    background: var(--gradient-dashboard);
+    background-attachment: fixed;
+    font-family: 'Sofia Sans', 'Outfit', 'Poppins', system-ui, sans-serif;
+  }
+  
+  /* Soft floral accents with texture */
+  body::before {
+    content: '';
+    position: fixed;
+    top: -10%;
+    right: -5%;
+    width: 50%;
+    height: 50%;
+    background: radial-gradient(circle, hsl(350 70% 85% / 0.08) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+  
+  body::after {
+    content: '';
+    position: fixed;
+    bottom: -10%;
+    left: -5%;
+    width: 50%;
+    height: 50%;
+    background: radial-gradient(circle, hsl(350 50% 88% / 0.06) 0%, transparent 65%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes float {
+    0%, 100% {
+      transform: translateY(0px);
+    }
+    50% {
+      transform: translateY(-5px);
+    }
+  }
+
+  @keyframes fade-in-up {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+
+  @keyframes scale-in {
+    from {
+      opacity: 0;
+      transform: scale(0.95);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .animate-float {
+    animation: float 4s ease-in-out infinite;
+  }
+
+  .animate-fade-in-up {
+    animation: fade-in-up 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94) forwards;
+  }
+
+  .animate-scale-in {
+    animation: scale-in 0.4s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+  
+  /* Hide Lovable badges and related elements */
+  a[href*="lovable.dev"],
+  iframe[src*="lovable.dev"],
+  div[style*="Edit with Lovable"],
+  .lovable-badge {
+    display: none !important;
+    opacity: 0 !important;
+    visibility: hidden !important;
+    pointer-events: none !important;
+    position: absolute !important;
+    z-index: -9999 !important;
+  }
+
+  /* Hide scrollbar */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+
+  /* Remove hover effects on touch devices (mobile/tablet) - keep only animations */
+  @media (hover: none) and (pointer: coarse) {
+    .hover\:scale-105:hover,
+    .hover\:scale-\[1\.02\]:hover,
+    .group:hover .group-hover\:translate-x-1,
+    .hover\:-translate-y-1:hover {
+      transform: none !important;
+    }
+    
+    .hover\:bg-primary\/90:hover,
+    .hover\:bg-muted\/50:hover,
+    .hover\:bg-accent:hover,
+    .hover\:bg-card:hover,
+    .hover\:bg-white\/20:hover {
+      background-color: inherit;
+    }
+    
+    .hover\:shadow-bloom:hover,
+    .hover\:shadow-soft:hover {
+      box-shadow: none;
+    }
+    
+    .hover\:border-primary\/30:hover {
+      border-color: inherit;
+    }
+  }
+}
