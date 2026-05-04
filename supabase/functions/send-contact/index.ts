@@ -35,6 +35,16 @@ serve(async (req) => {
 
     const { name, email, message } = parsed.data;
 
+    const escapeHtml = (s: string) => s
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#39;');
+    const safeName = escapeHtml(name);
+    const safeEmail = escapeHtml(email);
+    const safeMessage = escapeHtml(message);
+
     const html = `
 <!DOCTYPE html>
 <html lang="pt-BR">
@@ -45,10 +55,10 @@ serve(async (req) => {
       <h1 style="color:#ffffff;font-size:24px;margin:0;font-weight:600;">Nova mensagem de contato 💌</h1>
     </div>
     <div style="padding:32px;">
-      <p style="color:#333;font-size:15px;margin:0 0 8px;"><strong>Nome:</strong> ${name}</p>
-      <p style="color:#333;font-size:15px;margin:0 0 16px;"><strong>E-mail:</strong> ${email}</p>
+      <p style="color:#333;font-size:15px;margin:0 0 8px;"><strong>Nome:</strong> ${safeName}</p>
+      <p style="color:#333;font-size:15px;margin:0 0 16px;"><strong>E-mail:</strong> ${safeEmail}</p>
       <div style="background:#fdf2f8;border-radius:12px;padding:20px;margin:0 0 16px;">
-        <p style="color:#333;font-size:14px;line-height:1.7;margin:0;white-space:pre-wrap;">${message}</p>
+        <p style="color:#333;font-size:14px;line-height:1.7;margin:0;white-space:pre-wrap;">${safeMessage}</p>
       </div>
       <p style="color:#aaa;font-size:12px;margin:16px 0 0;">Enviado via formulário de contato da Bloomelle</p>
     </div>
