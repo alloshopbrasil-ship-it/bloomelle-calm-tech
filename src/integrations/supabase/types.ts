@@ -97,6 +97,7 @@ export type Database = {
       }
       community_posts: {
         Row: {
+          anonymous_author_id: string | null
           comments_count: number | null
           content: string
           created_at: string | null
@@ -113,6 +114,7 @@ export type Database = {
           visibility: string | null
         }
         Insert: {
+          anonymous_author_id?: string | null
           comments_count?: number | null
           content: string
           created_at?: string | null
@@ -129,6 +131,7 @@ export type Database = {
           visibility?: string | null
         }
         Update: {
+          anonymous_author_id?: string | null
           comments_count?: number | null
           content?: string
           created_at?: string | null
@@ -686,6 +689,7 @@ export type Database = {
       }
       post_comments: {
         Row: {
+          anonymous_author_id: string | null
           content: string
           created_at: string
           id: string
@@ -694,6 +698,7 @@ export type Database = {
           user_id: string
         }
         Insert: {
+          anonymous_author_id?: string | null
           content: string
           created_at?: string
           id?: string
@@ -702,6 +707,7 @@ export type Database = {
           user_id: string
         }
         Update: {
+          anonymous_author_id?: string | null
           content?: string
           created_at?: string
           id?: string
